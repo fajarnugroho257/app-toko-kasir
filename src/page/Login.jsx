@@ -40,7 +40,7 @@ function Login() {
 
   return (
     <div className="grid md:grid-cols-2">
-      <div className="hidden bg-colorBlue md:block">
+      <div className="hidden bg-colorPrimary md:block">
         <div className="h-screen flex items-center justify-center">
           <div>
             <img src={quick} alt="quick" className="w-56 mx-auto" />
@@ -55,7 +55,7 @@ function Login() {
       </div>
       <div className="h-screen bg-colorGray flex items-center justify-center">
         <form className="" onSubmit={handleLogin}>
-          <h4 className="font-poppins text-4xl font-semibold text-colorBlue text-center">
+          <h4 className="font-poppins text-4xl font-semibold text-colorPrimary text-center">
             Login
           </h4>
           <div className="mt-16">
@@ -63,7 +63,7 @@ function Login() {
               type="text"
               placeholder="Username"
               onChange={(e) => setUsermail(e.target.value)}
-              className="w-80 outline-none font-poppins font-normal border-b-2 border-colorBlue bg-transparent py-2 text-colorBlue"
+              className="w-80 outline-none font-poppins font-normal border-b-2 border-colorPrimary bg-transparent py-2 text-colorPrimary"
             />
           </div>
           <div className="relative mt-12 mb-2">
@@ -71,24 +71,24 @@ function Login() {
               type="password"
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
-              className="w-80 outline-none font-poppins font-normal border-b-2 border-colorBlue bg-transparent py-2 text-colorBlue"
+              className="w-80 outline-none font-poppins font-normal border-b-2 border-colorPrimary bg-transparent py-2 text-colorPrimary"
             />
             <i className="absolute right-0 bottom-2 fa fa-eye"></i>
           </div>
           <Link
             to="/login"
-            className="font-poppins text-sm italic text-colorBlue"
+            className="font-poppins text-sm italic text-colorPrimary"
           >
             Lupa password ?
           </Link>
           <div className="flex gap-4 justify-center mt-12">
             <button
               type="submit"
-              className="block bg-colorBlue font-poppins text-colorGray font-semibold py-1 px-3 rounded-[5px] hover:bg-blue-950"
+              className="block bg-colorPrimary font-poppins text-colorGray font-semibold py-1 px-3 rounded-[5px] hover:bg-blue-950"
             >
               Login
             </button>
-            <Link className="block border-2 border-colorBlue bg-colorGray font-poppins text-colorBlue font-semibold py-1 px-3 rounded-[5px] hover:bg-gray-200">
+            <Link className="block border-2 border-colorPrimary bg-colorGray font-poppins text-colorPrimary font-semibold py-1 px-3 rounded-[5px] hover:bg-gray-200">
               Sign In
             </Link>
           </div>

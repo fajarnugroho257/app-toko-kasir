@@ -121,7 +121,7 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
             <span className="text-red-600">{FormatTanggal(suplier_tgl)}</span>
           </h2>
         </div>
-        <div className="h-[2px] w-full bg-colorBlue"></div>
+        <div className="h-[2px] w-full bg-colorPrimary"></div>
         <div className="w-full h-[85%] overflow-auto text-sm md:text-md">
           <table className="font-poppins font-semibold w-full md:w-1/4 my-3">
             <tr>
@@ -157,10 +157,10 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
           </table>
           <div className="w-full h-fit md:grid grid-cols-2 gap-3">
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">Pembelian</h3>
               <table className="mt-2 w-full text-center font-poppins text-sm">
-                <tr className="bg-colorBlue text-white">
+                <tr className="bg-colorPrimary text-white">
                   <td className="border border-black">Suplier</td>
                   <td className="border border-black">Barang</td>
                   <td className="border border-black">Kotor</td>
@@ -282,10 +282,10 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
               </table>
             </div>
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">Pengiriman</h3>
               <table className="mt-2 w-full text-center font-poppins text-sm">
-                <tr className="bg-colorBlue text-white">
+                <tr className="bg-colorPrimary text-white">
                   <td className="border border-black">Merek</td>
                   <td className="border border-black">Nama Barang</td>
                   <td className="border border-black">Kardus</td>
@@ -381,12 +381,12 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
             </div>
             {/* tabel group by nama */}
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">
                 Group Barang Pembelian
               </h3>
               <table className="mt-2 w-full text-center font-poppins text-sm">
-                <tr className="bg-colorBlue text-white">
+                <tr className="bg-colorPrimary text-white">
                   <td className="border border-black">Nama Barang</td>
                   <td className="border border-black">Tonase Kotor</td>
                   <td className="border border-black">Total</td>
@@ -432,12 +432,12 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
             </div>
             {/* tabel group by nama */}
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">
                 Group Barang Pengiriman
               </h3>
               <table className="mt-2 w-full text-center text-sm font-poppins">
-                <tr className="bg-colorBlue text-white">
+                <tr className="bg-colorPrimary text-white">
                   <td className="border border-black">Nama Barang</td>
                   <td className="border border-black">Tonase Pembelian</td>
                   <td className="border border-black">Tonase pengiriman</td>
@@ -509,19 +509,19 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
               </table>
             </div>
             <div>
-              <h1 className="font-poppins text-lg text-colorBlue font-semibold">
+              <h1 className="font-poppins text-lg text-colorPrimary font-semibold">
                 Total Operasional :{" "}
                 {RupiahFormat(parseInt(granTtlBeban) + parseInt(bbnKardus))}
               </h1>
             </div>
             <div></div>
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">
                 Operasional Karyawan
               </h3>
               <table className="mt-2 w-full text-center text-sm font-poppins">
-                <tr key="Operasional" className="bg-colorBlue text-white">
+                <tr key="Operasional" className="bg-colorPrimary text-white">
                   <td className="border border-black">Nama</td>
                   <td className="border border-black">Nilai</td>
                 </tr>
@@ -556,14 +556,17 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
               </table>
             </div>
             <div className="w-full">
-              {/* <hr className="bg-colorBlue py-[1px] my-3" /> */}
+              {/* <hr className="bg-colorPrimary py-[1px] my-3" /> */}
               <h3 className="mt-2 font-poppins font-semibold">
                 Operasional Lainnya
               </h3>
               <div className="w-full flex gap-4">
                 <div className="w-1/2">
                   <table className="mt-2 w-full text-center text-sm font-poppins">
-                    <tr key="Operasional" className="bg-colorBlue text-white">
+                    <tr
+                      key="Operasional"
+                      className="bg-colorPrimary text-white"
+                    >
                       <td className="border border-black">Nama</td>
                       <td className="border border-black">Nilai</td>
                     </tr>
@@ -603,7 +606,7 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
                 </div>
                 <div className="w-1/2">
                   <table className="mt-2 w-full text-center font-poppins text-sm">
-                    <tr className="bg-colorBlue text-white">
+                    <tr className="bg-colorPrimary text-white">
                       <td className="border border-black font-semibold">
                         Kardus
                       </td>
@@ -620,7 +623,7 @@ function ModalLaporan({ isOpen, onClose, suplier_tgl }) {
         <div className="w-full h-[5%] mt-2">
           <div className="flex justify-end">
             <button
-              className="px-2 py-1 bg-colorGray border-2 border-colorBlue font-poppins text-colorBlue rounded hover:bg-slate-200"
+              className="px-2 py-1 bg-colorGray border-2 border-colorPrimary font-poppins text-colorPrimary rounded hover:bg-slate-200"
               onClick={onClose}
             >
               Close

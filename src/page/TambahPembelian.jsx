@@ -210,7 +210,7 @@ function TambahPembelian() {
       <div className=" w-full h-full md:w-[90%] md:h-[90%] mx-auto bg-gray-50 shadow-xl p-10 rounded-md">
         <div className="h-[5%] md:flex items-center mb-5 justify-between">
           <div className="font-poppins font-normal flex gap-4 items-center">
-            <h3 className="text-colorBlue text-lg font-bold ">Pembelian</h3>
+            <h3 className="text-colorPrimary text-lg font-bold ">Pembelian</h3>
             <h3
               className="text-gray-500 cursor-pointer border-l-2 px-2"
               onClick={() => handleTab("tambah-pengiriman")}
@@ -231,7 +231,7 @@ function TambahPembelian() {
             </h3>
           </div>
         </div>
-        <div className="h-[2px] w-full bg-colorBlue mb-4"></div>
+        <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
         <div className="h-[94%] md:h-[95%] ">
           <form onSubmit={handleSubmit} className="max-h-[90%] overflow-y-auto">
             <div className="flex font-poppins items-center my-2">
@@ -262,7 +262,7 @@ function TambahPembelian() {
             <div className="overflow-x-auto">
               <table>
                 <thead>
-                  <tr className="w-full text-white text-center font-poppins text-sm bg-colorBlue">
+                  <tr className="w-full text-white text-center font-poppins text-sm bg-colorPrimary">
                     <th className="border border-black md:w-[5%]">No</th>
                     <th className="border border-black md:w-[13%]">
                       Nama Barang
@@ -286,7 +286,7 @@ function TambahPembelian() {
                   {inputFields.map((field, index) => (
                     <React.Fragment key={index}>
                       <tr
-                        className={`text-center hover:bg-colorBlue  ${
+                        className={`text-center hover:bg-colorPrimary  ${
                           number % 2 === 0 ? "bg-gray-50" : "bg-gray-200"
                         }`}
                       >
@@ -467,7 +467,7 @@ function TambahPembelian() {
           </form>
           <div className="h-[10%]">
             <button
-              className="bg-colorBlue text-colorGray py-1 px-2 rounded-sm my-1 font-poppins text-sm"
+              className="bg-colorPrimary text-colorGray py-1 px-2 rounded-sm my-1 font-poppins text-sm"
               type="button"
               onClick={() => handleAddField()}
             >

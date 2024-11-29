@@ -40,13 +40,13 @@ function Header() {
   }
   return (
     <div>
-      <div className="flex justify-between bg-colorBlue items-center text-colorGray px-5 py-3">
+      <div className="flex justify-between bg-colorPrimary items-center text-colorGray px-5 py-3">
         <i
           onClick={toggleSidebar}
           className="fa fa-bars cursor-pointer md:hidden"
         ></i>
         <h3 className="md:text-xl font-semibold text-xl mdtext-4xl font-poppins">
-          Putra Cabe
+          POS Kasir
         </h3>
         <div className="hidden font-poppins font-normal text-color text-md md:flex gap-16">
           {header.map((val, key) => (
@@ -64,7 +64,7 @@ function Header() {
         <User />
       </div>
       <div
-        className={`fixed top-0 left-0 h-full bg-colorBlue md:hidden transition-transform transform ${
+        className={`fixed top-0 left-0 h-full bg-colorPrimary md:hidden transition-transform transform ${
           isOpen ? "translate-x-0 shadow-lg shadow-black" : "-translate-x-full"
         } w-64`}
       >

@@ -32,7 +32,7 @@ function User() {
         <div
           className={`absolute transition-transform transform ${
             isOpen ? "block" : "hidden"
-          } bg-white border border-colorBlue text-colorBlue font-poppins w-36 rounded-md -right-4`}
+          } bg-white border border-colorPrimary text-colorPrimary font-poppins w-36 rounded-md -right-4`}
         >
           <div className="px-3 py-4 text-sm">
             <Link to="/login" className="pb-2 w-fit block">

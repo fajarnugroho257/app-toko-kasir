@@ -39,45 +39,12 @@ function Pembayaran() {
       <div className="flex items-center">
         <div className="w-full h-fit">
           <h3 className="text-center mt-11 font-poppins text-xl md:text-4xl font-semibold text-gray-800 w-full md:w-2/5 mx-auto mb-10 md:mb-20">
-            Aplikasi Pencatatan Barang Masuk & Keluar{isOpen}
+            Aplikasi Kasir
           </h3>
           <div className="flex items-center justify-center">
             <div className="md:w-3/5 grid grid-cols-2 gap-20 md:gap-5 md:grid-cols-4 items-center justify-center">
-              <div className="relative">
-                <div
-                  onClick={() => handleModalTambah()}
-                  className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorBlue rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorBlueHover"
-                >
-                  <img src={Database} className="w-[40%] h-[55%]" alt="Shop" />
-                </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
-                  Tambah Data
-                </h3>
-                <div
-                  ref={dropdownRef}
-                  className={` ${
-                    isOpen ? "block" : "hidden"
-                  } absolute bg-gray-100 rounded-md shadow-md shadow-gray-400 font-poppins -top-16 left-10 w-52 py-3 px-4 md:left-32`}
-                >
-                  <div className="">
-                    <p
-                      className="hover:text-colorBlueHover cursor-pointer"
-                      onClick={() => handleSubmit("tambah-pembelian")}
-                    >
-                      Tambah Pembelian
-                    </p>
-                    <hr className="w-full bg-black h-[2px] my-1" />
-                    <p
-                      className="hover:text-colorBlueHover cursor-pointer"
-                      onClick={() => handleSubmit("tambah-pengiriman")}
-                    >
-                      Tambah Pengiriman
-                    </p>
-                  </div>
-                </div>
-              </div>
               <div onClick={() => handleSubmit("pembelian")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorBlue rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorBlueHover">
+                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={Shop} className="w-4/6" alt="Shop" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
@@ -85,7 +52,7 @@ function Pembayaran() {
                 </h3>
               </div>
               <div onClick={() => handleSubmit("pengiriman")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorBlue rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorBlueHover">
+                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={Shipped} className="w-4/6" alt="Shipped" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
@@ -93,7 +60,7 @@ function Pembayaran() {
                 </h3>
               </div>
               <div onClick={() => handleSubmit("laporan")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorBlue rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorBlueHover">
+                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={Report} className="w-4/6" alt="Report" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">

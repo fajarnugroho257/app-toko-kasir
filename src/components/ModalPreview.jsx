@@ -175,10 +175,10 @@ function ModalPreview({ isOpen, onClose, suplier_id }) {
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
       <div className="bg-white w-3/4 md:w-[30%] h-[50%] p-6 rounded-lg shadow-lg relative z-10">
         <div className="w-full h-[10%]">
-          <h2 className="text-xl font-semibold mb-2 text-colorBlue font-poppins">
+          <h2 className="text-xl font-semibold mb-2 text-colorPrimary font-poppins">
             Preview Nota
           </h2>
-          <div className="h-[2px] w-full bg-colorBlue mb-4"></div>
+          <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
         </div>
         <div className="w-full h-[80%] overflow-auto font-poppins text-sm">
           <table className=" my-3 w-full">
@@ -244,13 +244,13 @@ function ModalPreview({ isOpen, onClose, suplier_id }) {
         <div className="w-full h-[10%]">
           <div className="flex justify-between">
             <button
-              className="px-4 py-2 bg-colorBlue font-poppins text-white rounded"
+              className="px-4 py-2 bg-colorPrimary font-poppins text-white rounded"
               onClick={handlePrint}
             >
               Cetak
             </button>
             <button
-              className="px-4 py-2 bg-colorGray border-2 border-colorBlue font-poppins text-colorBlue rounded hover:bg-slate-200"
+              className="px-4 py-2 bg-colorGray border-2 border-colorPrimary font-poppins text-colorPrimary rounded hover:bg-slate-200"
               onClick={onClose}
             >
               Close

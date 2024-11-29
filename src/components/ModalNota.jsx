@@ -431,14 +431,14 @@ function ModalNota({ isOpen, nota_id, isClose }) {
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
       <div className="bg-white w-[90%] md:w-[85%] md:h-[85%] h-3/4 p-6 rounded-lg shadow-lg relative z-10">
         <div className="w-full h-[10%]">
-          <h2 className="text-xl font-semibold mb-2 text-colorBlue font-poppins">
+          <h2 className="text-xl font-semibold mb-2 text-colorPrimary font-poppins">
             Bayar / Nitip Pembelian
           </h2>
-          <div className="h-[2px] w-full bg-colorBlue mb-4"></div>
+          <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
         </div>
         <div className="w-full h-[80%] overflow-auto">
           <table
-            className={`border font-poppins bg-colorBlue text-gray-700 text-xs md:text-sm w-full ${
+            className={`border font-poppins bg-colorPrimary text-gray-700 text-xs md:text-sm w-full ${
               blur ? "blur-sm" : "blur-none"
             }`}
           >
@@ -586,7 +586,7 @@ function ModalNota({ isOpen, nota_id, isClose }) {
             </div>
             <div></div>
             <table
-              className={`border font-poppins bg-colorBlue text-gray-700 text-xs md:text-sm  w-full  ${
+              className={`border font-poppins bg-colorPrimary text-gray-700 text-xs md:text-sm  w-full  ${
                 blur ? "blur-sm" : "blur-none"
               }`}
             >
@@ -668,7 +668,7 @@ function ModalNota({ isOpen, nota_id, isClose }) {
         <div className="w-full h-[10%]">
           <div className="flex justify-end">
             <button
-              className="px-4 py-2 bg-colorGray border-2 border-colorBlue font-poppins text-colorBlue rounded hover:bg-slate-200"
+              className="px-4 py-2 bg-colorGray border-2 border-colorPrimary font-poppins text-colorPrimary rounded hover:bg-slate-200"
               onClick={() => isClose()}
             >
               Close
