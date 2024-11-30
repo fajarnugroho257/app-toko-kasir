@@ -13,11 +13,10 @@ function Header() {
   };
 
   // set active
-  const [activeHeader, setActiveHeader] = useState(null);
   const [pageName, setPageName] = useState("Pembelian");
   // list header
   const header = [
-    { name: "Dashboard", url: "/dashboard" },
+    // { name: "Dashboard", url: "/dashboard" },
     // { name: "Tambah Data", url: "/tambah-pembelian" },
     // { name: "Data Pembelian", url: "/pembelian" },
     // { name: "Data Pengiriman", url: "/pengiriman" },
@@ -61,7 +60,7 @@ function Header() {
             </Link>
           ))}
         </div>
-        <User />
+        {/* <User /> */}
       </div>
       <div
         className={`fixed top-0 left-0 h-full bg-colorPrimary md:hidden transition-transform transform ${

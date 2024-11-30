@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
-import Shop from "../assets/img/shop.png";
-import Database from "../assets/img/database.png";
-import Shipped from "../assets/img/shipped.png";
-import Report from "../assets/img/report.png";
+import iconPos from "../assets/img/pos.png";
+import iconLogout from "../assets/img/logout.png";
+import Logout from "../utilities/Logount";
+import api from "../utilities/axiosInterceptor";
+import Pos from "./Pos";
 
 function Pembayaran() {
   const navigate = useNavigate();
@@ -34,6 +35,26 @@ function Pembayaran() {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = async () => {
+    // TOKEN
+    const token = localStorage.getItem("token");
+    //
+    const response = await api.get("/logout", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    if (response.status === 200) {
+      // Hapus token dari local storage (atau session storage)
+      localStorage.removeItem("token");
+
+      // Arahkan ke halaman login
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="px-5 py-3 h-[86%]">
       <div className="flex items-center">
@@ -42,29 +63,21 @@ function Pembayaran() {
             Aplikasi Kasir
           </h3>
           <div className="flex items-center justify-center">
-            <div className="md:w-3/5 grid grid-cols-2 gap-20 md:gap-5 md:grid-cols-4 items-center justify-center">
-              <div onClick={() => handleSubmit("pembelian")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
-                  <img src={Shop} className="w-4/6" alt="Shop" />
+            <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-2 items-center justify-center">
+              <div onClick={() => handleSubmit("pos")}>
+                <div className="mx-auto w-28 h-36 md:w-60 md:h-72 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                  <img src={iconPos} className="w-4/6" alt="iconPos" />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
-                  Pembelian
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                  POS
                 </h3>
               </div>
-              <div onClick={() => handleSubmit("pengiriman")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
-                  <img src={Shipped} className="w-4/6" alt="Shipped" />
+              <div onClick={() => handleLogout()}>
+                <div className="mx-auto w-28 h-36 md:w-60 md:h-72 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                  <img src={iconLogout} className="w-4/6" alt="iconLogout" />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
-                  Pengiriman
-                </h3>
-              </div>
-              <div onClick={() => handleSubmit("laporan")}>
-                <div className="mx-auto w-20 h-28 md:w-36 md:h-40 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
-                  <img src={Report} className="w-4/6" alt="Report" />
-                </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm">
-                  Laporan
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                  LOGOUT
                 </h3>
               </div>
             </div>

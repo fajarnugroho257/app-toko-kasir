@@ -7,6 +7,7 @@ import AuthRoute from "./utilities/AuthRoute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useLocation } from "react-router-dom";
+import Pos from "./page/Pos";
 
 function App() {
   const location = useLocation();
@@ -29,6 +30,10 @@ function App() {
         <Route
           path="/dashboard"
           element={<AuthRoute element={<Dashboard />} isPrivate={true} />}
+        />
+        <Route
+          path="/pos"
+          element={<AuthRoute element={<Pos />} isPrivate={true} />}
         />
       </Routes>
       <div className={`${uri === "/login" ? "hidden" : ""} h-[7%]`}>
