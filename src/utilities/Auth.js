@@ -1,6 +1,11 @@
 // utils/auth.js
-export const setToken = (token) => {
-  localStorage.setItem("token", token);
+export const setToken = (data) => {
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("cabang_id", data.cabang_id);
+  localStorage.setItem("cabang_nama", data.cabang_nama);
+  localStorage.setItem("toko_pusat_id", data.toko_pusat_id);
+  localStorage.setItem("toko_pusat", data.toko_pusat);
+  localStorage.setItem("name", data.user.name);
 };
 
 export const getToken = () => {

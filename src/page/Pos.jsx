@@ -1,12 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AsyncSelect from "../components/AsyncSelect";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import RupiahFormat from "../utilities/RupiahFormat";
+import api from "../utilities/axiosInterceptor";
+import ModalPembayaran from "../components/ModalPembeyaran";
 
 function Pos() {
+  // TOKEN
+  const token = localStorage.getItem("token");
+  //
   const [cart, SetCart] = useState([]);
+  const [cart_id, setCartId] = useState(null);
+  const [openBayar, setOpenBayar] = useState(false);
+  // jika ada yang draft
+  useEffect(() => {
+    const fectData = async () => {
+      //fetching
+      const response = await api.get(`get-cart-draft`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Sisipkan token di header
+        },
+      });
+      if (response.status === 200) {
+        //get response data
+        const cart_data = await response.data.data;
+        // console.log(cart_data);
+        if (Object.keys(cart_data).length !== 0) {
+          SetCart(cart_data);
+        }
+      } else {
+        console.log(response.status);
+      }
+    };
+    fectData();
+  }, []);
+
   const [no, setNo] = useState(1);
   const dataCart = (childData) => {
     // console.log(childData);
@@ -27,7 +57,7 @@ function Pos() {
               params,
               {
                 headers: {
-                  // Authorization: `Bearer ${token}`, // Sisipkan token di header
+                  Authorization: `Bearer ${token}`, // Sisipkan token di header
                   "Content-Type": "application/json",
                   Accept: "application/json",
                 },
@@ -44,8 +74,8 @@ function Pos() {
               barang_barcode: draftCart.barang_barcode,
               barang_harga_jual: draftCart.barang_harga_jual,
               pusat_id: draftCart.pusat_id,
-              transaksi_qty: 1,
-              transaksi_subtotal: draftCart.barang_harga_jual,
+              cart_qty: 1,
+              cart_subtotal: draftCart.barang_harga_jual,
             };
             SetCart([...cart, draftDataCart]);
             setNo(no + 1);
@@ -72,9 +102,9 @@ function Pos() {
 
   const handleInputChange = (index, event) => {
     const values = [...cart];
-    if (event.target.name === "transaksi_qty") {
+    if (event.target.name === "cart_qty") {
       let subTotal = values[index]["barang_harga_jual"] * event.target.value;
-      values[index]["transaksi_subtotal"] = subTotal;
+      values[index]["cart_subtotal"] = subTotal;
     }
     values[index][event.target.name] = event.target.value;
     SetCart(values);
@@ -90,7 +120,7 @@ function Pos() {
   //
   const transaksiSubtotal = cart.reduce((total, item) => {
     // Jumlahkan harga jual setiap item ke dalam total
-    return total + parseInt(item.transaksi_subtotal);
+    return total + parseInt(item.cart_subtotal);
   }, 0);
 
   const rowTable = (item, index, resNo) => {
@@ -101,9 +131,9 @@ function Pos() {
         <td>{item.barang_nama}</td>
         <td>
           <input
-            value={item.transaksi_qty}
+            value={item.cart_qty}
             type="number"
-            name="transaksi_qty"
+            name="cart_qty"
             onChange={(event) => handleInputChange(index, event)}
             className="input-qty"
             required
@@ -112,9 +142,7 @@ function Pos() {
         <td className="text-right px-2">
           {RupiahFormat(item.barang_harga_jual)}
         </td>
-        <td className="text-right px-2">
-          {RupiahFormat(item.transaksi_subtotal)}
-        </td>
+        <td className="text-right px-2">{RupiahFormat(item.cart_subtotal)}</td>
         <td>
           <i
             onClick={() => handleRemoveField(index)}
@@ -125,6 +153,83 @@ function Pos() {
     );
   };
   let number = 1;
+  // handle submit
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const isConfirmed = window.confirm(
+      "Apakah Anda yakin ingin menyimpan data ini?"
+    );
+    if (isConfirmed) {
+      // console.log(sortedCart);
+      // toas
+      const toastId = toast.loading("Sending data...");
+      // console.log(sortedCart);
+      try {
+        const params = {
+          keranjang: sortedCart,
+        };
+        const response = await api.post("/api-store-cart-data", params, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sisipkan token di header
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+        if (response.status === 200) {
+          if (response.data.success === false) {
+            toast.update(toastId, {
+              render: response.data.message,
+              type: "error",
+              isLoading: false,
+              autoClose: 3000,
+            });
+          } else {
+            // open modal bayar
+            setOpenBayar(true);
+            setCartId(response.data.cart_id);
+            // console.log(response.data);
+            toast.update(toastId, {
+              render: "Sukses menambah ke keranjang",
+              type: "success",
+              isLoading: false,
+              autoClose: 3000,
+            });
+          }
+        }
+        // console.log(response.data);
+      } catch (error) {
+        const errors = error.response?.data?.errors;
+        let errorMessages;
+        if (errors) {
+          // Jika errors ada, buat string gabungan dari pesan error
+          errorMessages = Object.keys(errors)
+            .map((field) => `${field}: ${errors[field].join(", ")}`)
+            .join("\n");
+
+          console.log(errorMessages);
+        } else {
+          // Jika errors tidak ada
+          errorMessages = "No errors found in the response.";
+          console.log("No errors found in the response.");
+        }
+        toast.update(toastId, {
+          render: `Error sending data ! \n${errorMessages}`,
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+        console.error(`Error sending data ! \n${errorMessages}`);
+      }
+    }
+  };
+  const handleCloseBayar = () => {
+    setOpenBayar(false);
+  };
+  // delete all cart id success
+  const deleteCart = () => {
+    SetCart([]);
+  };
+  // console.log(cart_id);
   return (
     <div className="px-5 py-3 h-[86%] font-poppins">
       <div className="grid grid-rows-[auto,auto,330px] md:grid-rows-[auto,auto,400px] lg:grid-rows-[auto,auto,450px] h-full">
@@ -156,7 +261,10 @@ function Pos() {
             <i className="fa fa-shopping-cart"></i> Keranjang
           </span>
         </div>
-        <form className="grid grid-rows-[1fr,auto] h-full">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-rows-[1fr,auto] h-full"
+        >
           <div className="overflow-auto mt-2">
             <table className="table-auto border-collapse w-[110%] md:w-full text-xs md:text-xl">
               <thead>
@@ -181,12 +289,21 @@ function Pos() {
           </div>
           <button
             type="submit"
-            className="bg-colorPrimary text-white py-2 mt-2 text-sm md:text-lg"
+            className="bg-yellow-500 text-white py-2 mt-2 text-sm md:text-lg"
           >
-            Bayar
+            Masukkan Keranjang
           </button>
         </form>
       </div>
+      {openBayar && (
+        <ModalPembayaran
+          isOpen={openBayar}
+          onClose={handleCloseBayar}
+          ttlBayar={transaksiSubtotal}
+          cart_id={cart_id}
+          deleteCart={deleteCart}
+        />
+      )}
     </div>
   );
 }

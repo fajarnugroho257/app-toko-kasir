@@ -21,6 +21,14 @@
   @apply no-spinner border border-colorPrimary rounded-sm w-full p-2 text-center;
 }
 
+.inactive {
+  @apply border border-colorPrimary;
+}
+
+.active {
+  @apply bg-colorPrimary text-white;
+}
+
 .no-spinner {
   -moz-appearance: textfield; /* Untuk Firefox */
   -webkit-appearance: none; /* Untuk Chrome, Safari, Edge */

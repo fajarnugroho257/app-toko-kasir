@@ -7,6 +7,8 @@ import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
 
 function Pembayaran() {
+  const cabang_nama = localStorage.getItem("cabang_nama");
+  const name = localStorage.getItem("name");
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
 
@@ -59,8 +61,8 @@ function Pembayaran() {
     <div className="px-5 py-3 h-[86%]">
       <div className="flex items-center">
         <div className="w-full h-fit">
-          <h3 className="text-center mt-11 font-poppins text-xl md:text-4xl font-semibold text-gray-800 w-full md:w-2/5 mx-auto mb-10 md:mb-20">
-            Aplikasi Kasir
+          <h3 className="text-center mt-11 font-poppins text-xl md:text-3xl font-semibold text-gray-800 w-full md:w-1/2 mx-auto mb-10 md:mb-20">
+            Selamat Datang {name} <br /> {cabang_nama} <br />
           </h3>
           <div className="flex items-center justify-center">
             <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-2 items-center justify-center">

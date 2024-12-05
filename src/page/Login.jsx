@@ -19,7 +19,7 @@ function Login() {
     };
 
     // Contoh autentikasi
-    const response = await fetch("https://demoapps.online/api/login-api", {
+    const response = await fetch("http://127.0.0.1:8000/api/login-api", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data), // Mengonversi objek menjadi string JSON
@@ -27,9 +27,8 @@ function Login() {
 
     if (response.ok) {
       const data = await response.json();
-
       // Simpan token JWT
-      setToken(data.token);
+      setToken(data);
 
       // Redirect ke dashboard
       navigate("/dashboard");

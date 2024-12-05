@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Select from "react-select";
-import axios from "axios";
+import api from "../utilities/axiosInterceptor";
 
 const AsyncSelect = ({ sendDataToParent }) => {
+  // TOKEN
+  const token = localStorage.getItem("token");
   const [selectedOption, setSelectedOption] = useState(null);
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,14 +24,17 @@ const AsyncSelect = ({ sendDataToParent }) => {
   // Fungsi untuk menangani pencarian API berdasarkan input
   const handleInputChange = (input) => {
     setInputValue(input);
-
     // Hanya lakukan pencarian jika panjang input lebih dari 2 karakter
     if (input.length >= 1) {
       setIsLoading(true); // Menampilkan loading
-
       // Lakukan pencarian ke API
-      axios
-        .get(`http://127.0.0.1:8000/api/api-data-barang-cabang?query=${input}`) // Gantilah URL dengan API Anda
+      api
+        .get(`/api-data-barang-cabang?query=${input}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Menambahkan header Authorization
+            "Content-Type": "application/json", // Menambahkan header Content-Type jika diperlukan
+          },
+        })
         .then((response) => {
           const data = response.data.map((item) => ({
             value: item.id, // ID sebagai value
@@ -39,7 +44,8 @@ const AsyncSelect = ({ sendDataToParent }) => {
           setIsLoading(false); // Sembunyikan loading
         })
         .catch((error) => {
-          console.error("Error fetching data:", error);
+          console.error("Error fetching data:", error.message);
+          alert("Error fetching data : " + error.message);
           setIsLoading(false); // Sembunyikan loading jika error
         });
     }
@@ -47,23 +53,28 @@ const AsyncSelect = ({ sendDataToParent }) => {
 
   // Fungsi untuk menangani perubahan nilai select
   const handleChange = (selectedOption) => {
-    setSelectedOption(selectedOption);
-    // console.log("Selected ID:", selectedOption ? selectedOption.value : null);
     sendDataToParent(selectedOption ? selectedOption.value : null);
+    //
+    // setSelectedOption(selectedOption);
+    // console.log("Selected ID:", selectedOption ? selectedOption.value : null);
+    // setInputValue("");
     setOptions([]);
   };
 
-  //   useEffect(() => {
-  //     sendDataToParent(selectedOption ? selectedOption.value : null);
-  //     // console.log();
-  //   }, [selectedOption]);
   const [valBarcode, serValBarcode] = useState("");
   const handleInputBarcodeChange = async (input) => {
     serValBarcode(input.target.value);
     const characterCount = input.target.value.length;
     if (characterCount >= 13) {
-      const response = await axios.get(
-        `http://127.0.0.1:8000/api/api-barcode-data-barang-cabang?query=${input.target.value}`
+      const response = await api.get(
+        `/api-barcode-data-barang-cabang?query=${input.target.value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Menambahkan header Authorization
+            "Content-Type": "application/json", // Menambahkan header Content-Type jika diperlukan
+            // Header lainnya bisa ditambahkan sesuai kebutuhan
+          },
+        }
       );
 
       if (Object.keys(response.data).length !== 0) {
@@ -79,13 +90,17 @@ const AsyncSelect = ({ sendDataToParent }) => {
       <div className="flex gap-5 mb-2">
         <button
           onClick={() => aturInput("barcode")}
-          className="cursor-pointer bg-colorPrimary text-white py-1 px-2 hover:"
+          className={`cursor-pointer py-1 px-2 ${
+            stBarcode ? "active" : "inactive"
+          }`}
         >
           Barcode
         </button>
         <button
           onClick={() => aturInput("manual")}
-          className="cursor-pointer py-1 px-2 border border-colorPrimary"
+          className={`cursor-pointer py-1 px-2 inactive ${
+            stManual ? "active" : "inactive"
+          } `}
         >
           Manual
         </button>
