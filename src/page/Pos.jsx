@@ -72,10 +72,11 @@ function Pos() {
               barang_cabang_id: childData,
               barang_nama: draftCart.barang_nama,
               barang_barcode: draftCart.barang_barcode,
-              barang_harga_jual: draftCart.barang_harga_jual,
+              barang_harga_beli: draftCart.barang_harga_beli,
+              barang_harga_jual: response.data.cabang_barang_harga,
               pusat_id: draftCart.pusat_id,
               cart_qty: 1,
-              cart_subtotal: draftCart.barang_harga_jual,
+              cart_subtotal: response.data.cabang_barang_harga,
             };
             SetCart([...cart, draftDataCart]);
             setNo(no + 1);
@@ -99,7 +100,7 @@ function Pos() {
       }
     }
   };
-
+  // console.log(cart);
   const handleInputChange = (index, event) => {
     const values = [...cart];
     if (event.target.name === "cart_qty") {

@@ -59,8 +59,7 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
   const [valInputPelanggan, setValInputPelanggan] = useState("");
   const handleInputPelanggan = (event) => {
     const val = event.target.value;
-    setKembalian(parseInt(val) - parseInt(tagihan));
-    setValInputBayar(val);
+    setValInputPelanggan(val);
   };
   const closeModalBayar = () => {
     onClose();
@@ -82,6 +81,7 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
         cart_id: cart_id,
         ttlBayar: ttlBayar,
         valInputBayar: valInputBayar,
+        valInputPelanggan: valInputPelanggan,
         kembalian: kembalian,
       };
       // console.log(params);
