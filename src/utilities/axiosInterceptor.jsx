@@ -1,8 +1,10 @@
 import axios from "axios";
+const endPoint = "https://demoapps.online/app-pos/api";
+// const endPoint = "http://127.0.0.1:8000/api";
 
 // Instance Axios
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api", // Ganti dengan URL backend Anda
+  baseURL: endPoint, // Ganti dengan URL backend Anda
 });
 
 // Interceptor untuk menangani error

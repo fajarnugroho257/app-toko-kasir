@@ -52,8 +52,8 @@ function Pos() {
             let params = {
               barang_cabang_id: childData,
             };
-            const response = await axios.post(
-              "http://127.0.0.1:8000/api/detail-api-barcode-data-barang-cabang",
+            const response = await api.post(
+              "/detail-api-barcode-data-barang-cabang",
               params,
               {
                 headers: {
