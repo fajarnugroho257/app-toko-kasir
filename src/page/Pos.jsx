@@ -93,6 +93,9 @@ function Pos() {
 
         // insert table cart
       } else {
+        const audio = new Audio("sounds/error-sound.mp3");
+        audio.volume = 1;
+        audio.play();
         toast.error("Data sudah ada.", {
           autoClose: 5000, // Durasi toast muncul dalam milidetik
         });

@@ -1,5 +1,6 @@
 {
   "name": "client-pos",
+  "homepage": "/app-kasir",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

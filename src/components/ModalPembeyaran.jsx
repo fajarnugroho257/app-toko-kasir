@@ -51,9 +51,13 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
   };
   const [valInputBayar, setValInputBayar] = useState("");
   const handleInputBayar = (event) => {
-    const val = event.target.value;
-    setKembalian(parseInt(val) - parseInt(tagihan));
-    setValInputBayar(val);
+    // const val = event.target.value;
+    let input = event.target.value.replace(/\./g, "");
+    if (/^\d*$/.test(input)) {
+      let res = Number(input);
+      setKembalian(res - parseInt(tagihan));
+      setValInputBayar(res);
+    }
   };
 
   const [valInputPelanggan, setValInputPelanggan] = useState("");
@@ -139,7 +143,9 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
       console.error(`Error sending data ! \n${errorMessages}`);
     }
   };
-
+  const formatNumber = (number) => {
+    return new Intl.NumberFormat("id-ID").format(number);
+  };
   // perhitungan
 
   if (!isOpen) return null;
@@ -176,7 +182,7 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
             <div className="text-right">
               <input
                 onChange={(event) => handleInputBayar(event)}
-                value={valInputBayar}
+                value={formatNumber(valInputBayar)}
                 placeholder="Bayar"
                 autoFocus
                 className="w-full mt-5 text-right border border-colorPrimary py-4 px-2 font-poppins font-semibold"

@@ -63,7 +63,10 @@ const AsyncSelect = ({ sendDataToParent }) => {
 
   const [valBarcode, serValBarcode] = useState("");
   const handleInputBarcodeChange = async (input) => {
-    serValBarcode(input.target.value);
+    const inputValue = input.target.value;
+    if (/^\d*$/.test(inputValue)) {
+      serValBarcode(inputValue);
+    }
     const characterCount = input.target.value.length;
     if (characterCount >= 13) {
       const response = await api.get(

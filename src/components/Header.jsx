@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import quick from "../assets/img/calculator_6655639.png";
-
+import { useNavigate } from "react-router-dom";
 import User from "./User";
 import { useLocation } from "react-router-dom";
 
@@ -37,6 +37,7 @@ function Header() {
   ) {
     uri = "/tambah-pembelian";
   }
+  const navigate = useNavigate();
   return (
     <div>
       <div className="flex justify-between bg-colorPrimary items-center text-colorGray px-5 py-3">
@@ -59,6 +60,14 @@ function Header() {
               <div className={val.url === uri ? "header-active" : ""}></div>
             </Link>
           ))}
+        </div>
+        <div className="">
+          <i
+            onClick={() => {
+              navigate("/dashboard");
+            }}
+            className="fa fa-home cursor-pointer"
+          ></i>
         </div>
         {/* <User /> */}
       </div>

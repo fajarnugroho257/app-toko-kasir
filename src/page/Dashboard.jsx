@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import iconPos from "../assets/img/pos.png";
 import iconLogout from "../assets/img/logout.png";
 import Logout from "../utilities/Logount";
 import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
+import { getToken } from "../utilities/Auth";
 
 function Pembayaran() {
   const cabang_nama = localStorage.getItem("cabang_nama");
@@ -27,6 +28,29 @@ function Pembayaran() {
     };
   }, [dropdownRef]);
 
+  useEffect(() => {
+    const token = getToken();
+    async function checkToken() {
+      try {
+        const hasil = await api.get("/api-cek-token", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sisipkan token di header
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+        // console.log(hasil.data.message);
+        if (hasil.data.message !== "Token is valid") {
+          navigate("/login");
+          // alert("aa");
+        }
+      } catch (error) {
+        console.error("Terjadi kesalahan:", error);
+      }
+    }
+    checkToken();
+  }, []);
+
   const handleSubmit = (event) => {
     navigate(`/${event}`);
   };
@@ -38,22 +62,25 @@ function Pembayaran() {
   };
 
   const handleLogout = async () => {
-    // TOKEN
-    const token = localStorage.getItem("token");
-    //
-    const response = await api.get("/logout", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    });
-    if (response.status === 200) {
-      // Hapus token dari local storage (atau session storage)
-      localStorage.removeItem("token");
+    const isConfirmed = window.confirm("Apakah Anda yakin ingin keluar ?");
+    if (isConfirmed) {
+      // TOKEN
+      const token = localStorage.getItem("token");
+      //
+      const response = await api.get("/logout", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      if (response.status === 200) {
+        // Hapus token dari local storage (atau session storage)
+        localStorage.removeItem("token");
 
-      // Arahkan ke halaman login
-      navigate("/login");
+        // Arahkan ke halaman login
+        navigate("/login");
+      }
     }
   };
 

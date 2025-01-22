@@ -80,7 +80,7 @@ function Login() {
             to="/login"
             className="font-poppins text-sm italic text-colorPrimary"
           >
-            Lupa password ?
+            {/* Lupa password ? */}
           </Link>
           <div className="flex gap-4 justify-center mt-12">
             <button
@@ -89,9 +89,9 @@ function Login() {
             >
               Login
             </button>
-            <Link className="block border-2 border-colorPrimary bg-colorGray font-poppins text-colorPrimary font-semibold py-1 px-3 rounded-[5px] hover:bg-gray-200">
+            {/* <Link className="block border-2 border-colorPrimary bg-colorGray font-poppins text-colorPrimary font-semibold py-1 px-3 rounded-[5px] hover:bg-gray-200">
               Sign In
-            </Link>
+            </Link> */}
           </div>
         </form>
       </div>

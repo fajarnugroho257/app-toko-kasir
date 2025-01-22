@@ -4,7 +4,6 @@ import { getToken } from "./Auth";
 
 const AuthRoute = ({ element, isPrivate }) => {
   const token = getToken();
-
   // Jika ini adalah rute private dan token tidak ada, redirect ke halaman login
   if (isPrivate && !token) {
     return <Navigate to="/login" replace />;

@@ -14,7 +14,9 @@ function App() {
   const uri = location.pathname;
   return (
     <div className="h-screen">
-      <div className={`${uri === "/login" ? "hidden" : ""}  h-[7%]`}>
+      <div
+        className={`${uri === "/login" || uri === "/" ? "hidden" : ""}  h-[7%]`}
+      >
         <Header pageName="Pembelian" />
       </div>
       <Routes>
@@ -36,7 +38,9 @@ function App() {
           element={<AuthRoute element={<Pos />} isPrivate={true} />}
         />
       </Routes>
-      <div className={`${uri === "/login" ? "hidden" : ""} h-[7%]`}>
+      <div
+        className={`${uri === "/login" || uri === "/" ? "hidden" : ""} h-[7%]`}
+      >
         <Footer />
       </div>
     </div>
