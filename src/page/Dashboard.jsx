@@ -6,6 +6,7 @@ import Logout from "../utilities/Logount";
 import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
 import { getToken } from "../utilities/Auth";
+import PrintButton from "../components/PrintButton";
 
 function Pembayaran() {
   const cabang_nama = localStorage.getItem("cabang_nama");

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AsyncSelect from "../components/AsyncSelect";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+// import axios from "axios";
 import RupiahFormat from "../utilities/RupiahFormat";
 import api from "../utilities/axiosInterceptor";
 import ModalPembayaran from "../components/ModalPembeyaran";
@@ -306,6 +306,7 @@ function Pos() {
           ttlBayar={transaksiSubtotal}
           cart_id={cart_id}
           deleteCart={deleteCart}
+          cart_data={cart}
         />
       )}
     </div>

@@ -19,3 +19,11 @@ export const removeToken = () => {
 export const setPage = (page) => {
   localStorage.setItem("page", page);
 };
+
+export const getPusat = () => {
+  return localStorage.getItem("toko_pusat");
+};
+
+export const getCabang = () => {
+  return localStorage.getItem("cabang_nama");
+};

@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
+import { QZTrayProvider, useQZTray } from "./QZTrayContext";
 
-function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
+function ModalPembayaran({
+  isOpen,
+  onClose,
+  ttlBayar,
+  cart_id,
+  deleteCart,
+  cart_data,
+}) {
   // TOKEN
   const token = localStorage.getItem("token");
+  const pusat = localStorage.getItem("toko_pusat");
+  const cabang = localStorage.getItem("cabang_nama");
+  // console.log(cart_data);
   //
   const [number, setNumber] = useState([]);
   const [tagihan, setTagihan] = useState(ttlBayar);
@@ -60,6 +71,115 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
     }
   };
 
+  const formatRupiah_2 = (angka) => {
+    if (typeof angka !== "number") {
+      angka = parseInt(angka, 10); // Pastikan angka diubah menjadi number
+      if (isNaN(angka)) return "Rp0"; // Jika bukan angka, kembalikan default
+    }
+
+    // Ubah angka ke string dan tambahkan tanda titik setiap 3 digit
+    const rupiah = angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    return `Rp${rupiah}`;
+  };
+
+  const { isConnected, printer, findPrinter } = useQZTray();
+
+  const printThermal = async () => {
+    try {
+      if (!printer) {
+        alert("Printer belum dipilih!");
+        return;
+      }
+
+      // Data dummy sebagai pengganti respons API Laravel
+      const printData = {
+        options: {
+          printer: "POS-58", // Nama printer
+          "font-size": 11, // Ukuran font
+        },
+        content: generatePrintContent(),
+      };
+
+      console.log("Print Data (Dummy):", printData);
+      const qz = window.qz; // Akses qz dari window
+      // Konfigurasi printer
+      const config = qz.configs.create(printData.options.printer, {
+        fontSize: printData.options["font-size"], // Sesuaikan opsi lainnya
+      });
+
+      // Data yang akan dicetak
+      const data = [
+        {
+          type: "raw",
+          format: "plain",
+          data: printData.content,
+        },
+      ];
+
+      // Kirim perintah cetak
+      await qz.print(config, data);
+      console.log("Print job successful");
+      alert("Print job sent successfully!");
+    } catch (error) {
+      console.error("Error during printing:", error);
+      alert("Error during printing: " + error.message);
+    }
+  };
+  const padRight = (text, length) => text.padEnd(length, " ");
+  const padLeft = (text, length) => text.padStart(length, " ");
+  const padBoth = (text, length) => {
+    const totalPadding = length - text.length;
+    const paddingLeft = Math.floor(totalPadding / 2);
+    const paddingRight = totalPadding - paddingLeft;
+    return " ".repeat(paddingLeft) + text + " ".repeat(paddingRight);
+  };
+
+  let isiNota = "";
+  let ttlCartSubtotal = 0;
+
+  const generateIsiNota = () => {
+    if (!Array.isArray(cart_data) || cart_data.length === 0) {
+      return ""; // Jika cart_data kosong atau bukan array
+    }
+
+    return cart_data.reduce((acc, val) => {
+      const line =
+        `${padRight(val.barang_nama, 32)}\n` +
+        `${padRight(formatRupiah_2(val.barang_harga_jual), 13)}` +
+        `${padRight(val.cart_qty.toString(), 4)}` +
+        `${padRight(formatRupiah_2(val.cart_subtotal), 14)}\n`;
+      return acc + line;
+    }, "");
+  };
+
+  // tanggal
+  const currentDateTime = new Date().toLocaleString();
+
+  const generatePrintContent = () => {
+    const isiNota = generateIsiNota();
+    const totalLabel = "Total";
+    const separator = padBoth("--------------------------------", 32);
+
+    const content = [
+      `${padBoth(pusat, 32)}`,
+      `${padBoth(cabang, 32)}`,
+      `${padBoth(currentDateTime, 32)}`,
+      padBoth("================================", 32),
+      `${padRight("Produk", 13)}${padRight("Qty", 4)}${padRight("Harga", 14)}`,
+      separator,
+      isiNota,
+      separator,
+      `${padRight(totalLabel, 17)}${padRight(formatRupiah_2(tagihan), 14)}`,
+      `${padRight("Bayar", 17)}${padRight(formatRupiah_2(valInputBayar), 14)}`,
+      `${padRight("Kembali", 17)}${padRight(formatRupiah_2(kembalian), 14)}`,
+      separator,
+      padBoth("Terima Kasih!", 32),
+    ];
+
+    return content.join("\n");
+  };
+
   const [valInputPelanggan, setValInputPelanggan] = useState("");
   const handleInputPelanggan = (event) => {
     const val = event.target.value;
@@ -96,6 +216,7 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
           Accept: "application/json",
         },
       });
+      // const response = { status: 200, data: { success: true } };
       if (response.status === 200) {
         if (response.data.success === false) {
           toast.update(toastId, {
@@ -105,6 +226,7 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
             autoClose: 3000,
           });
         } else {
+          printThermal();
           // close modal bayar
           closeModalBayar();
           // delete
@@ -156,6 +278,8 @@ function ModalPembayaran({ isOpen, onClose, ttlBayar, cart_id, deleteCart }) {
         <h2 className="text-lg md:text-xl font-bold mb-4 text-black font-poppins">
           Pembayaran
         </h2>
+        <p>QZ Tray: {isConnected ? "Connected" : "Disconnected"}</p>
+        <p>Printer: {printer || "Not Found"}</p>
         <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
         <div className="">
           <div className="w-full">

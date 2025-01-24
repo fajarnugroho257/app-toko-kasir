@@ -5,10 +5,13 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
 import "./index.css";
+import { QZTrayProvider } from "./components/QZTrayContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter basename="/app-kasir">
-    <App />
+    <QZTrayProvider>
+      <App />
+    </QZTrayProvider>
   </BrowserRouter>
 );
