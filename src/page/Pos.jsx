@@ -10,6 +10,7 @@ import ModalPembayaran from "../components/ModalPembeyaran";
 function Pos() {
   // TOKEN
   const token = localStorage.getItem("token");
+  const cabang_id = localStorage.getItem("cabang_id");
   //
   const [cart, SetCart] = useState([]);
   const [cart_id, setCartId] = useState(null);
@@ -51,7 +52,9 @@ function Pos() {
           try {
             let params = {
               barang_cabang_id: childData,
+              id_cabang: cabang_id,
             };
+            // console.log(params);
             const response = await api.post(
               "/detail-api-barcode-data-barang-cabang",
               params,
@@ -165,6 +168,7 @@ function Pos() {
     );
     if (isConfirmed) {
       // console.log(sortedCart);
+      // console.log(cabang_id);
       // toas
       const toastId = toast.loading("Sending data...");
       // console.log(sortedCart);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
 import api from "../utilities/axiosInterceptor";
+import { ToastContainer, toast } from "react-toastify";
 
 const AsyncSelect = ({ sendDataToParent }) => {
   // TOKEN
@@ -26,10 +27,11 @@ const AsyncSelect = ({ sendDataToParent }) => {
     setInputValue(input);
     // Hanya lakukan pencarian jika panjang input lebih dari 2 karakter
     if (input.length >= 1) {
+      const cabang_id = localStorage.getItem("cabang_id");
       setIsLoading(true); // Menampilkan loading
       // Lakukan pencarian ke API
       api
-        .get(`/api-data-barang-cabang?query=${input}`, {
+        .get(`/api-data-barang-cabang?cabang_id=${cabang_id}&query=${input}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Menambahkan header Authorization
             "Content-Type": "application/json", // Menambahkan header Content-Type jika diperlukan
@@ -69,8 +71,9 @@ const AsyncSelect = ({ sendDataToParent }) => {
     }
     const characterCount = input.target.value.length;
     if (characterCount >= 13) {
+      const cabang_id = localStorage.getItem("cabang_id");
       const response = await api.get(
-        `/api-barcode-data-barang-cabang?query=${input.target.value}`,
+        `/api-barcode-data-barang-cabang?cabang_id=${cabang_id}&query=${input.target.value}`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Menambahkan header Authorization
@@ -83,6 +86,14 @@ const AsyncSelect = ({ sendDataToParent }) => {
       if (Object.keys(response.data).length !== 0) {
         // console.log(response.data);
         sendDataToParent(response.data.id);
+        serValBarcode("");
+      } else {
+        const audio = new Audio("sounds/error-sound.mp3");
+        audio.volume = 1;
+        audio.play();
+        toast.error("Data tidak ditemukan.", {
+          autoClose: 5000, // Durasi toast muncul dalam milidetik
+        });
         serValBarcode("");
       }
     }
