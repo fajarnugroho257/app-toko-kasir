@@ -139,13 +139,15 @@ function ModalPembayaran({
   let ttlCartSubtotal = 0;
 
   const generateIsiNota = () => {
+    console.log(cart_data);
     if (!Array.isArray(cart_data) || cart_data.length === 0) {
       return ""; // Jika cart_data kosong atau bukan array
     }
 
     return cart_data.reduce((acc, val) => {
+      const st_disc = val.barang_st_diskon === true ? " (Grosir)" : "";
       const line =
-        `${padRight(val.barang_nama, 32)}\n` +
+        `${padRight(val.barang_nama + st_disc, 32)}\n` +
         `${padRight(formatRupiah_2(val.barang_harga_jual), 13)}` +
         `${padRight(val.cart_qty.toString(), 4)}` +
         `${padRight(formatRupiah_2(val.cart_subtotal), 14)}\n`;

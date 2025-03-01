@@ -27,7 +27,6 @@ function Pos() {
       if (response.status === 200) {
         //get response data
         const cart_data = await response.data.data;
-        // console.log(cart_data);
         if (Object.keys(cart_data).length !== 0) {
           SetCart(cart_data);
         }
@@ -76,11 +75,17 @@ function Pos() {
               barang_nama: draftCart.barang_nama,
               barang_barcode: draftCart.barang_barcode,
               barang_harga_beli: draftCart.barang_harga_beli,
-              barang_harga_jual: response.data.cabang_barang_harga,
+              awal_barang_harga_jual: draftCart.barang_harga_jual,
+              barang_harga_jual: draftCart.barang_harga_jual,
+              barang_grosir_pembelian: draftCart.barang_grosir_pembelian,
+              barang_grosir_harga_jual: draftCart.barang_grosir_harga_jual,
+              barang_grosir_diskon: draftCart.barang_grosir_harga_jual,
+              barang_st_diskon: false,
               pusat_id: draftCart.pusat_id,
               cart_qty: 1,
-              cart_subtotal: response.data.cabang_barang_harga,
+              cart_subtotal: draftCart.barang_harga_jual,
             };
+            // console.log(draftDataCart);
             SetCart([...cart, draftDataCart]);
             setNo(no + 1);
           } catch (err) {
@@ -109,9 +114,28 @@ function Pos() {
   // console.log(cart);
   const handleInputChange = (index, event) => {
     const values = [...cart];
+    // console.log(values);
     if (event.target.name === "cart_qty") {
-      let subTotal = values[index]["barang_harga_jual"] * event.target.value;
+      let nilai_qty = event.target.value;
+      let result_harga =
+        parseInt(nilai_qty) >=
+        parseInt(values[index]["barang_grosir_pembelian"])
+          ? values[index]["barang_grosir_harga_jual"]
+          : values[index]["awal_barang_harga_jual"];
+      values[index]["barang_harga_jual"] = result_harga;
+      let subTotal = result_harga * event.target.value;
       values[index]["cart_subtotal"] = subTotal;
+      // status diskon
+      let stDiskon = false;
+      if (
+        parseInt(nilai_qty) >=
+        parseInt(values[index]["barang_grosir_pembelian"])
+      ) {
+        stDiskon = true;
+      } else {
+        stDiskon = false;
+      }
+      values[index]["barang_st_diskon"] = stDiskon;
     }
     values[index][event.target.name] = event.target.value;
     SetCart(values);
@@ -131,8 +155,9 @@ function Pos() {
   }, 0);
 
   const rowTable = (item, index, resNo) => {
+    // console.log(item);
     return (
-      <tr className="text-center" key={index}>
+      <tr className="text-center text-xs md:text-lg" key={index}>
         <td>{resNo}</td>
         <td>{item.barang_barcode}</td>
         <td>{item.barang_nama}</td>
@@ -147,7 +172,19 @@ function Pos() {
           ></input>
         </td>
         <td className="text-right px-2">
-          {RupiahFormat(item.barang_harga_jual)}
+          <p
+            className={item.barang_st_diskon ? "line-through text-red-500" : ""}
+          >
+            {RupiahFormat(item.awal_barang_harga_jual)}
+          </p>
+          <div
+            className={`flex justify-between items-center ${
+              item.barang_st_diskon ? "" : "hidden"
+            }`}
+          >
+            <span className="text-xs">Grosir : </span>
+            <p>{RupiahFormat(item.barang_harga_jual)}</p>
+          </div>
         </td>
         <td className="text-right px-2">{RupiahFormat(item.cart_subtotal)}</td>
         <td>
