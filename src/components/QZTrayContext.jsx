@@ -5,10 +5,14 @@ const QZTrayContext = createContext();
 export const useQZTray = () => useContext(QZTrayContext);
 
 export const QZTrayProvider = ({ children }) => {
+  const stPrinter = localStorage.getItem("printSelected");
   const [isConnected, setIsConnected] = useState(false);
   const [printer, setPrinter] = useState(null);
 
   useEffect(() => {
+    if (stPrinter === "bluethoot") {
+      return;
+    }
     const qz = window.qz; // Akses qz dari window
 
     // Inisialisasi QZ Tray

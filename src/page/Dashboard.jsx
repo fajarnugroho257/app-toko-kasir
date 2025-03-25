@@ -2,6 +2,8 @@ import { Navigate, useNavigate } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import iconPos from "../assets/img/pos.png";
 import iconLogout from "../assets/img/logout.png";
+import iconReport from "../assets/img/report.png";
+import iconSettings from "../assets/img/settings.png";
 import Logout from "../utilities/Logount";
 import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
@@ -93,17 +95,37 @@ function Pembayaran() {
             Selamat Datang {name} <br /> {cabang_nama} <br />
           </h3>
           <div className="flex items-center justify-center">
-            <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-2 items-center justify-center">
+            <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-4 items-center justify-center">
               <div onClick={() => handleSubmit("pos")}>
-                <div className="mx-auto w-28 h-36 md:w-60 md:h-72 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconPos} className="w-4/6" alt="iconPos" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
                   POS
                 </h3>
               </div>
+              <div onClick={() => handleSubmit("penjualan")}>
+                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                  <img src={iconReport} className="w-4/6" alt="iconReport" />
+                </div>
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                  Data Penjualan
+                </h3>
+              </div>
+              <div onClick={() => handleSubmit("settings")}>
+                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                  <img
+                    src={iconSettings}
+                    className="w-4/6"
+                    alt="iconSettings"
+                  />
+                </div>
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                  Settings
+                </h3>
+              </div>
               <div onClick={() => handleLogout()}>
-                <div className="mx-auto w-28 h-36 md:w-60 md:h-72 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconLogout} className="w-4/6" alt="iconLogout" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">

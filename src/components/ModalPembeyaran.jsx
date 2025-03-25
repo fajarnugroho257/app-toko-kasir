@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
 import { QZTrayProvider, useQZTray } from "./QZTrayContext";
+import PrintBluethootPos from "../utilities/PrintBluethootPos";
 
 function ModalPembayaran({
   isOpen,
@@ -85,12 +86,60 @@ function ModalPembayaran({
 
   const { isConnected, printer, findPrinter } = useQZTray();
 
+  function padCenter(text, width, padChar = " ") {
+    let padding = width - text.length;
+    let padStart = Math.floor(padding / 2);
+    let padEnd = padding - padStart;
+    return padChar.repeat(padStart) + text + padChar.repeat(padEnd);
+  }
+
   const printThermal = async () => {
     try {
       if (!printer) {
         alert("Printer belum dipilih!");
         return;
       }
+      // start content
+      const printDatas = cart_data;
+      // Format tabel dengan padding
+      const pusat_nama = pusat;
+      const cabang_nama = cabang;
+      //
+      const now = new Date();
+      //
+      let content = padCenter(pusat_nama, 30, " ") + "\n";
+      content += padCenter(cabang_nama, 30, " ") + "\n";
+      content += padCenter(`${now.toLocaleString()}`, 30, " ") + "\n";
+      content += "=============================" + "\n";
+      content += "| Item     |Qty| Price       |" + "\n";
+      content += "=============================" + "\n";
+
+      printDatas.forEach((item) => {
+        let nama = item.barang_nama;
+        let cart_diskon = item.barang_st_diskon ? " (Grosir)" : "";
+        let qty = String(item.cart_qty).padStart(1, " ");
+        let harga = `${formatRupiah(item.barang_harga_jual)}`.padEnd(8, " ");
+        let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(11, " ");
+        content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal} |\n`;
+      });
+
+      content += "=============================" + "\n";
+      content +=
+        "| Total".padEnd(13, " ") +
+        `${formatRupiah(tagihan)}`.padStart(15, " ") +
+        " |\n";
+      content += "-----------------------------" + "\n";
+      content +=
+        "| Bayar".padEnd(13, " ") +
+        `${formatRupiah(valInputBayar)}`.padStart(15, " ") +
+        " |\n";
+      content +=
+        "| Kembalian".padEnd(13, " ") +
+        `${formatRupiah(kembalian)}`.padStart(15, " ") +
+        " |\n";
+      content += "=============================" + "\n";
+      content += padCenter("Terimakasih", 30, " ") + "\n\n";
+      // end content
 
       // Data dummy sebagai pengganti respons API Laravel
       const printData = {
@@ -98,7 +147,7 @@ function ModalPembayaran({
           printer: "POS-58", // Nama printer
           "font-size": 11, // Ukuran font
         },
-        content: generatePrintContent(),
+        content: content,
       };
 
       console.log("Print Data (Dummy):", printData);
@@ -125,61 +174,6 @@ function ModalPembayaran({
       console.error("Error during printing:", error);
       alert("Error during printing: " + error.message);
     }
-  };
-  const padRight = (text, length) => text.padEnd(length, " ");
-  const padLeft = (text, length) => text.padStart(length, " ");
-  const padBoth = (text, length) => {
-    const totalPadding = length - text.length;
-    const paddingLeft = Math.floor(totalPadding / 2);
-    const paddingRight = totalPadding - paddingLeft;
-    return " ".repeat(paddingLeft) + text + " ".repeat(paddingRight);
-  };
-
-  let isiNota = "";
-  let ttlCartSubtotal = 0;
-
-  const generateIsiNota = () => {
-    console.log(cart_data);
-    if (!Array.isArray(cart_data) || cart_data.length === 0) {
-      return ""; // Jika cart_data kosong atau bukan array
-    }
-
-    return cart_data.reduce((acc, val) => {
-      const st_disc = val.barang_st_diskon === true ? " (Grosir)" : "";
-      const line =
-        `${padRight(val.barang_nama + st_disc, 32)}\n` +
-        `${padRight(formatRupiah_2(val.barang_harga_jual), 13)}` +
-        `${padRight(val.cart_qty.toString(), 4)}` +
-        `${padRight(formatRupiah_2(val.cart_subtotal), 14)}\n`;
-      return acc + line;
-    }, "");
-  };
-
-  // tanggal
-  const currentDateTime = new Date().toLocaleString();
-
-  const generatePrintContent = () => {
-    const isiNota = generateIsiNota();
-    const totalLabel = "Total";
-    const separator = padBoth("--------------------------------", 32);
-
-    const content = [
-      `${padBoth(pusat, 32)}`,
-      `${padBoth(cabang, 32)}`,
-      `${padBoth(currentDateTime, 32)}`,
-      padBoth("================================", 32),
-      `${padRight("Produk", 13)}${padRight("Qty", 4)}${padRight("Harga", 14)}`,
-      separator,
-      isiNota,
-      separator,
-      `${padRight(totalLabel, 17)}${padRight(formatRupiah_2(tagihan), 14)}`,
-      `${padRight("Bayar", 17)}${padRight(formatRupiah_2(valInputBayar), 14)}`,
-      `${padRight("Kembali", 17)}${padRight(formatRupiah_2(kembalian), 14)}`,
-      separator,
-      padBoth("Terima Kasih!", 32),
-    ];
-
-    return content.join("\n");
   };
 
   const [valInputPelanggan, setValInputPelanggan] = useState("");
@@ -228,7 +222,20 @@ function ModalPembayaran({
             autoClose: 3000,
           });
         } else {
-          printThermal();
+          // status printer
+          const stPrinter = localStorage.getItem("printSelected");
+          if (stPrinter === "kabel") {
+            printThermal();
+          } else {
+            PrintBluethootPos(
+              cart_data,
+              pusat,
+              cabang,
+              tagihan,
+              valInputBayar,
+              kembalian
+            );
+          }
           // close modal bayar
           closeModalBayar();
           // delete
@@ -246,18 +253,6 @@ function ModalPembayaran({
       // const errors = error.response?.data?.errors;
       let errorMessages;
       console.log(error.response);
-      // if (errors) {
-      //   // Jika errors ada, buat string gabungan dari pesan error
-      //   errorMessages = Object.keys(errors)
-      //     .map((field) => `${field}: ${errors[field].join(", ")}`)
-      //     .join("\n");
-
-      //   console.log(errorMessages);
-      // } else {
-      //   // Jika errors tidak ada
-      //   errorMessages = "No errors found in the response.";
-      //   console.log("No errors found in the response.");
-      // }
       toast.update(toastId, {
         render: `Error sending data ! \n${errorMessages}`,
         type: "error",
@@ -329,89 +324,6 @@ function ModalPembayaran({
               </small>
             </div>
           </div>
-          {/* <div className="md:w-1/2">
-            <div className="bg-colorGray w-full mt-4 md:mt-0 md:w-3/4 ml-auto">
-              <div className="h-20 flex items-center">
-                <div className="bg-white mx-4 w-full md:py-5 py-3 md:px-2 px-1 text-right font-poppins font-bold text-black text-md md:text-xl">
-                  {formatRupiah(result) || 0}
-                </div>
-              </div>
-              <div className="grid grid-cols-3 font-poppins font-bold text-black text-md md:text-xl">
-                <div
-                  onClick={() => handleNumber(1)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  1
-                </div>
-                <div
-                  onClick={() => handleNumber(2)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  2
-                </div>
-                <div
-                  onClick={() => handleNumber(3)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  3
-                </div>
-                <div
-                  onClick={() => handleNumber(4)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  4
-                </div>
-                <div
-                  onClick={() => handleNumber(5)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  5
-                </div>
-                <div
-                  onClick={() => handleNumber(6)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  6
-                </div>
-                <div
-                  onClick={() => handleNumber(7)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  7
-                </div>
-                <div
-                  onClick={() => handleNumber(8)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  8
-                </div>
-                <div
-                  onClick={() => handleNumber(9)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  9
-                </div>
-                <div
-                  onClick={() => handleNumber("c")}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  C
-                </div>
-                <div
-                  onClick={() => handleNumber(0)}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  0
-                </div>
-                <div
-                  onClick={() => deleteItem()}
-                  className="w-12 h-12 md:w-14 md:h-14 bg-white m-1 flex items-center justify-center cursor-pointer mx-auto"
-                >
-                  X
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
 
         {/* <input type="text" name="customer" className={`border-2 border-colorBlue block mb-4 py-1 w-full px-2`} placeholder="" /> */}

@@ -8,6 +8,8 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useLocation } from "react-router-dom";
 import Pos from "./page/Pos";
+import Penjualan from "./page/Penjualan";
+import Setting from "./page/Settings";
 
 function App() {
   const location = useLocation();
@@ -36,6 +38,14 @@ function App() {
         <Route
           path="/pos"
           element={<AuthRoute element={<Pos />} isPrivate={true} />}
+        />
+        <Route
+          path="/penjualan"
+          element={<AuthRoute element={<Penjualan />} isPrivate={true} />}
+        />
+        <Route
+          path="/settings"
+          element={<AuthRoute element={<Setting />} isPrivate={true} />}
         />
       </Routes>
       <div

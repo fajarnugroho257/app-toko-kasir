@@ -204,8 +204,6 @@ function Pos() {
       "Apakah Anda yakin ingin menyimpan data ini?"
     );
     if (isConfirmed) {
-      // console.log(sortedCart);
-      // console.log(cabang_id);
       // toas
       const toastId = toast.loading("Sending data...");
       // console.log(sortedCart);
