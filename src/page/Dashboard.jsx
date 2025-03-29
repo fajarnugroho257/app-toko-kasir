@@ -9,6 +9,7 @@ import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
 import { getToken } from "../utilities/Auth";
 import PrintButton from "../components/PrintButton";
+import { ToastContainer } from "react-toastify";
 
 function Pembayaran() {
   const cabang_nama = localStorage.getItem("cabang_nama");
@@ -89,6 +90,7 @@ function Pembayaran() {
 
   return (
     <div className="px-5 py-3 h-[86%]">
+      <ToastContainer />
       <div className="flex items-center">
         <div className="w-full h-fit">
           <h3 className="text-center mt-11 font-poppins text-xl md:text-3xl font-semibold text-gray-800 w-full md:w-1/2 mx-auto mb-10 md:mb-20">

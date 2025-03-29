@@ -98,13 +98,12 @@ const PrintBluethoot = async (
     }
 
     async function sendDataInChunks(characteristic, data) {
-      const chunkSize = 512; // Batas maksimum byte
+      const chunkSize = 256; // Kurangi ukuran chunk
       const chunks = chunkArrayBuffer(data, chunkSize);
 
       for (const chunk of chunks) {
         await characteristic.writeValue(chunk);
-        // Tunggu sedikit waktu jika perangkat memerlukan jeda
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 200)); // Tambah jeda waktu
       }
     }
     // end membagi dua

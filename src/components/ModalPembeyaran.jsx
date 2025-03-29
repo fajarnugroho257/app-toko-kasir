@@ -219,7 +219,7 @@ function ModalPembayaran({
             render: response.data.message,
             type: "error",
             isLoading: false,
-            autoClose: 3000,
+            autoClose: 1000,
           });
         } else {
           // status printer
@@ -244,7 +244,7 @@ function ModalPembayaran({
             render: "Sukses melakukan pembayaran",
             type: "success",
             isLoading: false,
-            autoClose: 3000,
+            autoClose: 1000,
           });
         }
       }
@@ -302,6 +302,8 @@ function ModalPembayaran({
             </div>
             <div className="text-right">
               <input
+                pattern="\d*"
+                inputMode="numeric"
                 onChange={(event) => handleInputBayar(event)}
                 value={formatNumber(valInputBayar)}
                 placeholder="Bayar"

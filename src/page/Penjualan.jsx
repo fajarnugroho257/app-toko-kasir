@@ -5,13 +5,14 @@ import RupiahFormat from "../utilities/RupiahFormat";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import ModalDetailNota from "../components/ModalDetailNota";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 const Penjualan = () => {
   // state
   const [dataTransaksi, setDataTransaksi] = useState([]);
   // get data
   const getDataTransaksi = async () => {
+    const toastId = toast.loading("Tunggu...");
     try {
       const token = getToken();
       const response = await api.get(`list-transaksi-data-barang-cabang`, {
@@ -20,10 +21,22 @@ const Penjualan = () => {
         },
       });
       if (response.data.success) {
+        toast.update(toastId, {
+          render: response.data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
         setDataTransaksi(response.data.data);
       }
       //   console.log(response.data.data);
     } catch (error) {
+      toast.update(toastId, {
+        render: error,
+        type: "success",
+        isLoading: false,
+        autoClose: 1000,
+      });
       console.log(error);
     }
   };

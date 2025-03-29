@@ -27,7 +27,7 @@ function ModalDetailNota({ isOpen, onClose, cartId }) {
           render: "Berhasil mendapatkan data nota",
           type: "success",
           isLoading: false,
-          autoClose: 3000,
+          autoClose: 1000,
         });
         setNotaData(response.data.data);
         setTrans(response.data.transaksiCart);

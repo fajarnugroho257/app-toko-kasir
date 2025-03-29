@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../utilities/Auth";
 import quick from "../assets/img/calculator_6655639.png";
+import { ToastContainer, toast } from "react-toastify";
+
 function Login() {
   localStorage.setItem("page", "login");
   const [usermail, setUsermail] = useState("");
@@ -11,32 +13,45 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+    const toastId = toast.loading("Tunggu...");
     // Data yang akan dikirim
     const data = {
       username: usermail,
       password: password,
     };
 
-    // Contoh autentikasi
-    // const endPoint = "https://demoapps.online/app-pos/api/login-api";
-    const endPoint = "http://127.0.0.1:8000/api/login-api";
+    const endPoint = "https://demoapps.online/app-pos/api/login-api";
+    // const endPoint = "http://127.0.0.1:8000/api/login-api";
     const response = await fetch(endPoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data), // Mengonversi objek menjadi string JSON
+      body: JSON.stringify(data),
     });
-
     if (response.ok) {
       const data = await response.json();
       // Simpan token JWT
       setToken(data);
-
+      toast.update(toastId, {
+        render: data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
       // Redirect ke dashboard
       navigate("/dashboard");
     } else {
-      alert("Login gagal!");
+      const data = await response.json();
+      toast.update(toastId, {
+        render: data.message,
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
+  };
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -61,6 +76,7 @@ function Login() {
           </h4>
           <div className="mt-16">
             <input
+              required
               type="text"
               placeholder="Username"
               onChange={(e) => setUsermail(e.target.value)}
@@ -69,12 +85,18 @@ function Login() {
           </div>
           <div className="relative mt-12 mb-2">
             <input
-              type="password"
+              required
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
               className="w-80 outline-none font-poppins font-normal border-b-2 border-colorPrimary bg-transparent py-2 text-colorPrimary"
             />
-            <i className="absolute right-0 bottom-2 fa fa-eye"></i>
+            <i
+              onClick={handleShowPassword}
+              className={`absolute right-0 bottom-2 ${
+                showPassword ? "fa fa-eye" : "fa fa-eye-slash"
+              } cursor-pointer`}
+            ></i>
           </div>
           <Link
             to="/login"
@@ -95,6 +117,7 @@ function Login() {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 }
