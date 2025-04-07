@@ -138,7 +138,6 @@ function Pos() {
       values[index]["barang_st_diskon"] = stDiskon;
     }
     values[index][event.target.name] = event.target.value;
-    console.log(values);
     SetCart(values);
   };
   const sortedCart = cart.sort((a, b) => b.no_urut - a.no_urut);

@@ -70,7 +70,7 @@ const AsyncSelect = ({ sendDataToParent }) => {
       serValBarcode(inputValue);
     }
     const characterCount = input.target.value.length;
-    if (characterCount >= 13) {
+    if (characterCount >= 12) {
       const cabang_id = localStorage.getItem("cabang_id");
       const response = await api.get(
         `/api-barcode-data-barang-cabang?cabang_id=${cabang_id}&query=${input.target.value}`,
