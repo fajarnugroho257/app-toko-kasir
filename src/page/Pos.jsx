@@ -80,7 +80,7 @@ function Pos() {
               barang_grosir_pembelian: draftCart.barang_grosir_pembelian,
               barang_grosir_harga_jual: draftCart.barang_grosir_harga_jual,
               barang_grosir_diskon: draftCart.barang_grosir_harga_jual,
-              barang_st_diskon: false,
+              barang_st_diskon: "no",
               pusat_id: draftCart.pusat_id,
               cart_qty: 1,
               cart_subtotal: draftCart.barang_harga_jual,
@@ -131,13 +131,14 @@ function Pos() {
         parseInt(nilai_qty) >=
         parseInt(values[index]["barang_grosir_pembelian"])
       ) {
-        stDiskon = true;
+        stDiskon = "yes";
       } else {
-        stDiskon = false;
+        stDiskon = "no";
       }
       values[index]["barang_st_diskon"] = stDiskon;
     }
     values[index][event.target.name] = event.target.value;
+    console.log(values);
     SetCart(values);
   };
   const sortedCart = cart.sort((a, b) => b.no_urut - a.no_urut);
@@ -173,13 +174,15 @@ function Pos() {
         </td>
         <td className="text-right px-2">
           <p
-            className={item.barang_st_diskon ? "line-through text-red-500" : ""}
+            className={
+              item.barang_st_diskon === "yes" ? "line-through text-red-500" : ""
+            }
           >
             {RupiahFormat(item.awal_barang_harga_jual)}
           </p>
           <div
             className={`flex justify-between items-center ${
-              item.barang_st_diskon ? "" : "hidden"
+              item.barang_st_diskon === "yes" ? "" : "hidden"
             }`}
           >
             <span className="text-xs">Grosir : </span>
