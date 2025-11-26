@@ -1,5 +1,5 @@
 import axios from "axios";
-const endPoint = "https://demoapps.online/app-pos/api";
+const endPoint = "https://sameeramart.com/app-pos/api";
 // const endPoint = "http://127.0.0.1:8000/api";
 
 // Instance Axios

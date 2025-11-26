@@ -20,7 +20,7 @@ function Login() {
       password: password,
     };
 
-    const endPoint = "https://demoapps.online/app-pos/api/login-api";
+    const endPoint = "https://sameeramart.com/app-pos/api/login-api";
     // const endPoint = "http://127.0.0.1:8000/api/login-api";
     const response = await fetch(endPoint, {
       method: "POST",
