@@ -27,6 +27,7 @@ function Pos() {
       if (response.status === 200) {
         //get response data
         const cart_data = await response.data.data;
+        
         if (Object.keys(cart_data).length !== 0) {
           SetCart(cart_data);
         }
@@ -64,9 +65,8 @@ function Pos() {
                   Accept: "application/json",
                 },
               }
-            ); // Gantilah URL dengan API Anda
-
-            // setData(response.data); // Menyimpan data yang diterima
+            ); // Gantilah URL dengan API
+            // setData(response.data); 
             // console.log(response.data.barang_master);
             const draftCart = response.data.barang_master;
             const draftDataCart = {
@@ -94,7 +94,7 @@ function Pos() {
             });
             // setError("Terjadi kesalahan saat mengambil data"); // Menangani error
           } finally {
-            // setIsLoading(false); // Menandakan bahwa proses pengambilan data sudah selesai
+            // setIsLoading(false);
           }
         };
         fetchData();

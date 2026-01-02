@@ -32,7 +32,7 @@ function ModalDetailNota({ isOpen, onClose, cartId }) {
         setNotaData(response.data.data);
         setTrans(response.data.transaksiCart);
       }
-      //   console.log(response.data.data);
+        // console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -89,13 +89,13 @@ function ModalDetailNota({ isOpen, onClose, cartId }) {
                       return (
                         <tr
                           key={index}
-                          className="border border-gray-200 hover:bg-gray-50"
+                          className={` ${val.cart_diskon === "yes" ? "text-red-500" : ""} border border-gray-200 hover:bg-gray-50`}
                         >
                           <td className="px-6 py-3 border border-gray-200 text-center">
                             {index + 1}
                           </td>
                           <td className="px-6 py-3 border border-gray-200">
-                            {val.cart_nama}
+                            {val.cart_nama} {val.cart_diskon === 'yes' ? "(Grosir)" : ""}
                           </td>
                           <td className="px-6 py-3 border border-gray-200 text-center">
                             {RupiahFormat(val.cart_harga_jual)}

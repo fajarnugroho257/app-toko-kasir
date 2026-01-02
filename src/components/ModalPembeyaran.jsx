@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
 import { QZTrayProvider, useQZTray } from "./QZTrayContext";
@@ -16,12 +16,36 @@ function ModalPembayaran({
   const token = localStorage.getItem("token");
   const pusat = localStorage.getItem("toko_pusat");
   const cabang = localStorage.getItem("cabang_nama");
-  // console.log(cart_data);
   //
   const [number, setNumber] = useState([]);
-  const [tagihan, setTagihan] = useState(ttlBayar);
+  const [tagihan, setTagihan] = useState(0);
   const [kembalian, setKembalian] = useState(0);
+  const [resCartData, setCartData] = useState(cart_data);
 
+  // Update total bayar dari backend
+  useEffect(() => {
+    getGrandTotalByCartId();
+  }, []);
+  const getGrandTotalByCartId = async () => {
+    //fetching
+    const params = { 'cart_id' : cart_id };
+    const response = await api.post("/get-cart-subtotal-draft", params, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Sisipkan token di header
+      },
+    });
+    if (response.status === 200) {
+      //get response data
+      const draftTagihan = await response.data.grand_total;
+      const draftCart = await response.data.rs_draft;
+      // console.log(draftTagihan);
+      setTagihan(draftTagihan ?? ttlBayar);
+      setCartData(draftCart);
+    } else {
+      console.log(response.status);
+    }
+  }
+  
   const result = number.join("");
 
   const handleNumber = (value) => {
@@ -92,7 +116,7 @@ function ModalPembayaran({
     let padEnd = padding - padStart;
     return padChar.repeat(padStart) + text + padChar.repeat(padEnd);
   }
-
+  // print kabel
   const printThermal = async () => {
     try {
       if (!printer) {
@@ -100,7 +124,7 @@ function ModalPembayaran({
         return;
       }
       // start content
-      const printDatas = cart_data;
+      const printDatas = resCartData;
       // Format tabel dengan padding
       const pusat_nama = pusat;
       const cabang_nama = cabang;
@@ -199,7 +223,7 @@ function ModalPembayaran({
     try {
       const params = {
         cart_id: cart_id,
-        ttlBayar: ttlBayar,
+        ttlBayar: tagihan ?? ttlBayar,
         valInputBayar: valInputBayar,
         valInputPelanggan: valInputPelanggan,
         kembalian: kembalian,
@@ -228,7 +252,7 @@ function ModalPembayaran({
             printThermal();
           } else {
             PrintBluethootPos(
-              cart_data,
+              resCartData,
               pusat,
               cabang,
               tagihan,
