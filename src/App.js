@@ -10,6 +10,8 @@ import { useLocation } from "react-router-dom";
 import Pos from "./page/Pos";
 import Penjualan from "./page/Penjualan";
 import Setting from "./page/Settings";
+import DraftPenjualan from "./page/DraftPenjualan";
+import Hutang from "./page/Hutang";
 
 function App() {
   const location = useLocation();
@@ -46,6 +48,14 @@ function App() {
         <Route
           path="/settings"
           element={<AuthRoute element={<Setting />} isPrivate={true} />}
+        />
+        <Route
+          path="/hutang"
+          element={<AuthRoute element={<Hutang />} isPrivate={true} />}
+        />
+        <Route
+          path="/draft-penjualan"
+          element={<AuthRoute element={<DraftPenjualan />} isPrivate={true} />}
         />
       </Routes>
       <div

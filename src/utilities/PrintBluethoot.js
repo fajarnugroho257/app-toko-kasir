@@ -1,3 +1,5 @@
+import { connectSavedPrinter } from "./printerCharacteristic.js";
+
 const PrintBluethoot = async (
   cart_data,
   pusat,
@@ -71,21 +73,23 @@ const PrintBluethoot = async (
     const printData = new TextEncoder().encode(content);
 
     // Hubungkan ke perangkat Bluetooth
-    const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
-      optionalServices: ["000018f0-0000-1000-8000-00805f9b34fb"],
-    });
+    // const device = await navigator.bluetooth.requestDevice({
+    //   acceptAllDevices: true,
+    //   optionalServices: ["000018f0-0000-1000-8000-00805f9b34fb"],
+    // });
 
-    console.log("Perangkat ditemukan:", device.name);
+    // console.log("Perangkat ditemukan:", device.name);
 
-    const server = await device.gatt.connect();
-    const service = await server.getPrimaryService(
-      "000018f0-0000-1000-8000-00805f9b34fb"
-    );
-    const characteristic = await service.getCharacteristic(
-      "00002af1-0000-1000-8000-00805f9b34fb"
-    );
+    // const server = await device.gatt.connect();
+    // const service = await server.getPrimaryService(
+    //   "000018f0-0000-1000-8000-00805f9b34fb"
+    // );
+    // const characteristic = await service.getCharacteristic(
+    //   "00002af1-0000-1000-8000-00805f9b34fb"
+    // );
 
+    const characteristic = await connectSavedPrinter();
+    // console.log(characteristic);
     // Kirim data ke printer
     // await characteristic.writeValue(printData);
     // mambagi dua

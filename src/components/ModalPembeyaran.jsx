@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
 import { QZTrayProvider, useQZTray } from "./QZTrayContext";
 import PrintBluethootPos from "../utilities/PrintBluethootPos";
+import ModalAddDraf from "./ModalAddDraft";
+import ModalAddHutang from "./ModalAddHutang";
 
 function ModalPembayaran({
   isOpen,
@@ -21,6 +23,11 @@ function ModalPembayaran({
   const [tagihan, setTagihan] = useState(0);
   const [kembalian, setKembalian] = useState(0);
   const [resCartData, setCartData] = useState(cart_data);
+  const [stModalDraft, setStModalDraft] = useState(false);
+  const [stModalHutang, setStModalHutang] = useState(false);
+  const [draftStart, setSdraftStart] = useState(false);
+  const [draftEnd, setdraftEnd] = useState(false);
+  const [draftNote, setdraftNote] = useState(false);
 
   // Update total bayar dari backend
   useEffect(() => {
@@ -28,7 +35,7 @@ function ModalPembayaran({
   }, []);
   const getGrandTotalByCartId = async () => {
     //fetching
-    const params = { 'cart_id' : cart_id };
+    const params = { cart_id: cart_id };
     const response = await api.post("/get-cart-subtotal-draft", params, {
       headers: {
         Authorization: `Bearer ${token}`, // Sisipkan token di header
@@ -38,14 +45,27 @@ function ModalPembayaran({
       //get response data
       const draftTagihan = await response.data.grand_total;
       const draftCart = await response.data.rs_draft;
-      // console.log(draftTagihan);
+      const cartDataDraft = await response.data.cartDataDraft;
+      // cek kosong / tidak
+      if (cartDataDraft || Object.keys(cartDataDraft).length >= 1) {
+        // set nama pelanggan dari darft
+        setValInputPelanggan(cartDataDraft.draft_pelanggan ?? "");
+        const draft_uang_muka = Number(cartDataDraft.draft_uang_muka ?? 0);
+        setKembalian(draft_uang_muka - parseInt(draftTagihan ?? ttlBayar));
+        setValInputBayar(draft_uang_muka);
+        // tanggal
+        setSdraftStart(cartDataDraft.draft_start ?? null);
+        setdraftEnd(cartDataDraft.draft_end ?? null);
+        setdraftNote(cartDataDraft.draft_note ?? null);
+      }
+      //
       setTagihan(draftTagihan ?? ttlBayar);
       setCartData(draftCart);
     } else {
       console.log(response.status);
     }
-  }
-  
+  };
+
   const result = number.join("");
 
   const handleNumber = (value) => {
@@ -94,18 +114,6 @@ function ModalPembayaran({
       setKembalian(res - parseInt(tagihan));
       setValInputBayar(res);
     }
-  };
-
-  const formatRupiah_2 = (angka) => {
-    if (typeof angka !== "number") {
-      angka = parseInt(angka, 10); // Pastikan angka diubah menjadi number
-      if (isNaN(angka)) return "Rp0"; // Jika bukan angka, kembalikan default
-    }
-
-    // Ubah angka ke string dan tambahkan tanda titik setiap 3 digit
-    const rupiah = angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-    return `Rp${rupiah}`;
   };
 
   const { isConnected, printer, findPrinter } = useQZTray();
@@ -257,7 +265,7 @@ function ModalPembayaran({
               cabang,
               tagihan,
               valInputBayar,
-              kembalian
+              kembalian,
             );
           }
           // close modal bayar
@@ -288,6 +296,16 @@ function ModalPembayaran({
   };
   const formatNumber = (number) => {
     return new Intl.NumberFormat("id-ID").format(number);
+  };
+
+  // modal draft pesanan
+  const handleDraftPensanan = () => {
+    setStModalDraft(!stModalDraft);
+  };
+
+  // modal draft hutang
+  const handleHutang = () => {
+    setStModalHutang(!stModalHutang);
   };
   // perhitungan
 
@@ -353,22 +371,66 @@ function ModalPembayaran({
         </div>
 
         {/* <input type="text" name="customer" className={`border-2 border-colorBlue block mb-4 py-1 w-full px-2`} placeholder="" /> */}
-        <div className="flex justify-between mt-5">
+        <div className="md:flex md:justify-between mt-5">
           <button
-            className="px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
+            className="text-sm md:text-base px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
             onClick={onClose}
           >
             Close
           </button>
-          <button
-            onClick={() => handleStoreBayar()}
-            type="submit"
-            className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
-          >
-            Bayar & Cetak
-          </button>
+          <div className="flex text-sm md:text-base justify-between">
+            <button
+              onClick={() => handleHutang()}
+              type="submit"
+              className="mr-1 px-2 md:px-4 py-1 md:py-2 bg-red-600 font-poppins text-colorGray rounded hover:bg-red-500"
+            >
+              Hutang
+            </button>
+            <button
+              onClick={() => handleDraftPensanan()}
+              type="submit"
+              className="mr-1 px-2 md:px-4 py-1 md:py-2 bg-blue-600 font-poppins text-colorGray rounded hover:bg-blue-500"
+            >
+              Buat Draft
+            </button>
+            <button
+              onClick={() => handleStoreBayar()}
+              type="submit"
+              className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
+            >
+              Bayar & Cetak
+            </button>
+          </div>
         </div>
       </div>
+      {stModalDraft && (
+        <ModalAddDraf
+          close={handleDraftPensanan}
+          cart_id={cart_id}
+          inputBayar={valInputBayar}
+          tagihan={tagihan}
+          pelanggan={valInputPelanggan}
+          ttlBayar={ttlBayar}
+          deleteCart={deleteCart}
+          draftStart={draftStart}
+          draftEnd={draftEnd}
+          draftNote={draftNote}
+          closeModalPembayaran={onClose}
+        />
+      )}
+      {stModalHutang && (
+        <ModalAddHutang
+          close={handleHutang}
+          cart_id={cart_id}
+          inputBayar={valInputBayar}
+          tagihan={tagihan}
+          pelanggan={valInputPelanggan}
+          ttlBayar={ttlBayar}
+          deleteCart={deleteCart}
+          draftNote={draftNote}
+          closeModalPembayaran={onClose}
+        />
+      )}
     </div>
   );
 }

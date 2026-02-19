@@ -6,40 +6,38 @@ import dayjs from "dayjs";
 import "dayjs/locale/id";
 import ModalDetailNota from "../components/ModalDetailNota";
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import {
+  swalError,
+  swalLoading,
+  swalSuccess,
+  swalSuccessAutoClose,
+} from "../utilities/Swal";
 
 const Penjualan = () => {
   // state
   const [dataTransaksi, setDataTransaksi] = useState([]);
+  const [tab, setTab] = useState("penjualan");
   // get data
   const getDataTransaksi = async () => {
-    const toastId = toast.loading("Tunggu...");
+    swalLoading("Silahkan tunggu...", "Sedang mendapatkan data");
     try {
       const token = getToken();
       const response = await api.get(`list-transaksi-data-barang-cabang`, {
         headers: {
-          Authorization: `Bearer ${token}`, // Sisipkan token di header
+          Authorization: `Bearer ${token}`,
         },
       });
-      if (response.data.success) {
-        toast.update(toastId, {
-          render: response.data.message,
-          type: "success",
-          isLoading: false,
-          autoClose: 1000,
-        });
-        setDataTransaksi(response.data.data);
-      }
-      //   console.log(response.data.data);
+      setDataTransaksi(response.data.data || []);
+      swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 1000);
     } catch (error) {
-      toast.update(toastId, {
-        render: error,
-        type: "success",
-        isLoading: false,
-        autoClose: 1000,
-      });
-      console.log(error);
+      swalError(
+        "Opps..!",
+        error?.response?.data?.message || error.message || "Terjadi kesalahan",
+      );
     }
   };
+
   useEffect(() => {
     getDataTransaksi();
   }, []);
@@ -56,10 +54,37 @@ const Penjualan = () => {
     setCartId(cart_id);
   };
 
+  const handleTab = (tabStatus) => {
+    setTab(tabStatus);
+  };
+
   return (
-    <div className="px-5 py-3 h-[86%]">
+    <div className="h-[86%]">
       <div className="h-full overflow-auto p-10">
-        <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
+        <div className="grid grid-cols-3 gap-4 text-center font-poppins">
+          <Link
+            to={"/penjualan"}
+            className={`text-xs md:text-sm cursor-pointer w-full my-2 px-3 py-2 rounded-md ${tab == "penjualan" ? "bg-colorPrimary text-white" : "bg-gray-300 text-black"}`}
+            onClick={() => handleTab("penjualan")}
+          >
+            Riwayat Penjualan
+          </Link>
+          <Link
+            to={"/hutang"}
+            className={`text-xs md:text-sm cursor-pointer w-full my-2 px-3 py-2 rounded-md ${tab == "hutang" ? "bg-colorPrimary text-white" : "bg-gray-300 text-black"}`}
+            onClick={() => handleTab("hutang")}
+          >
+            Daftar Hutang
+          </Link>
+          <Link
+            to={"/draft-penjualan"}
+            className={`text-xs md:text-sm cursor-pointer w-full my-2 px-3 py-2 rounded-md ${tab == "draft" ? "bg-colorPrimary text-white" : "bg-gray-300 text-black"}`}
+            onClick={() => handleTab("draft")}
+          >
+            Draft Penjualan
+          </Link>
+        </div>
+        <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-sm font-poppins">
           <thead>
             <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
               <th className="px-1 py-3 border border-gray-200">No</th>
@@ -103,12 +128,24 @@ const Penjualan = () => {
                 <td className="px-6 py-3 border border-gray-200">
                   {val.users.name}
                 </td>
-                <td className="px-6 py-3 border border-gray-200 text-center">
+                <td className="px-6 py-3 border border-gray-200 text-center ">
                   <button
                     onClick={() => handleNota(val.cart_id)}
                     className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded"
                   >
                     <i className="fa fa-print"></i>
+                  </button>
+                  <button
+                    onClick={() => handleNota(val.cart_id)}
+                    className="px-2 py-1 text-white my-1 md:my-0 mx-0 md:mx-2 bg-green-500 hover:bg-green-600 rounded"
+                  >
+                    <i className="fa fa-undo"></i>
+                  </button>
+                  <button
+                    onClick={() => handleNota(val.cart_id)}
+                    className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded"
+                  >
+                    <i className="fa fa-trash"></i>
                   </button>
                 </td>
               </tr>

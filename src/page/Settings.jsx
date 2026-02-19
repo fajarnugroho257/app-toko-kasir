@@ -8,10 +8,29 @@ const Setting = () => {
   const handleSelected = (val) => {
     if (val === "kabel") {
       window.location.reload();
+      setSelected(val);
+      localStorage.setItem("printSelected", val);
+    } else if(val === "bluethoot") {
+      selectPrinter(val);
     }
+    
+    // console.log("Perangkat ditemukan ya:", device.name);
+  };
+
+  // bluetooth.js
+  async function selectPrinter(val) {
+    const device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: ["000018f0-0000-1000-8000-00805f9b34fb"],
+    });
+    
+    localStorage.setItem("printerDeviceId", device.id);
+    localStorage.setItem("printerName", device.name);
     setSelected(val);
     localStorage.setItem("printSelected", val);
-  };
+    // 
+  }
+
   return (
     <div className="px-5 py-3 h-[86%]">
       <div className="h-full overflow-auto p-3">

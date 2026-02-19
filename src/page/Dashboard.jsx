@@ -8,8 +8,8 @@ import Logout from "../utilities/Logount";
 import api from "../utilities/axiosInterceptor";
 import Pos from "./Pos";
 import { getToken } from "../utilities/Auth";
-import PrintButton from "../components/PrintButton";
 import { ToastContainer } from "react-toastify";
+import { swalSuccess, swalError, swalConfirm } from "../utilities/Swal";
 
 function Pembayaran() {
   const cabang_nama = localStorage.getItem("cabang_nama");
@@ -66,11 +66,9 @@ function Pembayaran() {
   };
 
   const handleLogout = async () => {
-    const isConfirmed = window.confirm("Apakah Anda yakin ingin keluar ?");
-    if (isConfirmed) {
-      // TOKEN
+    const result = await swalConfirm("Yakin?", "Anda akan keluar");
+    if (result.isConfirmed) {
       const token = localStorage.getItem("token");
-      //
       const response = await api.get("/logout", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -81,7 +79,6 @@ function Pembayaran() {
       if (response.status === 200) {
         // Hapus token dari local storage (atau session storage)
         localStorage.removeItem("token");
-
         // Arahkan ke halaman login
         navigate("/login");
       }
@@ -99,38 +96,38 @@ function Pembayaran() {
           <div className="flex items-center justify-center">
             <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-4 items-center justify-center">
               <div onClick={() => handleSubmit("pos")}>
-                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-28 md:h-40 lg:w-44 lg:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconPos} className="w-4/6" alt="iconPos" />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-lg lg:text-2xl">
                   POS
                 </h3>
               </div>
               <div onClick={() => handleSubmit("penjualan")}>
-                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-28 md:h-40 lg:w-44 lg:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconReport} className="w-4/6" alt="iconReport" />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
-                  Data Penjualan
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-lg lg:text-2xl">
+                  Penjualan
                 </h3>
               </div>
               <div onClick={() => handleSubmit("settings")}>
-                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-28 md:h-40 lg:w-44 lg:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img
                     src={iconSettings}
                     className="w-4/6"
                     alt="iconSettings"
                   />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-lg lg:text-2xl">
                   Settings
                 </h3>
               </div>
               <div onClick={() => handleLogout()}>
-                <div className="mx-auto w-24 h-[110px] md:w-44 md:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
+                <div className="mx-auto w-24 h-[110px] md:w-28 md:h-40 lg:w-44 lg:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconLogout} className="w-4/6" alt="iconLogout" />
                 </div>
-                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-2xl">
+                <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-lg lg:text-2xl">
                   LOGOUT
                 </h3>
               </div>

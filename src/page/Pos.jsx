@@ -6,17 +6,26 @@ import "react-toastify/dist/ReactToastify.css";
 import RupiahFormat from "../utilities/RupiahFormat";
 import api from "../utilities/axiosInterceptor";
 import ModalPembayaran from "../components/ModalPembeyaran";
+import { Navigate, useNavigate } from "react-router-dom";
+import { swalConfirm, swalError } from "../utilities/Swal";
 
 function Pos() {
   // TOKEN
   const token = localStorage.getItem("token");
   const cabang_id = localStorage.getItem("cabang_id");
+  // printer
+  const navigate = useNavigate();
+  const nowPrintSelected = localStorage.getItem("printSelected");
   //
   const [cart, SetCart] = useState([]);
   const [cart_id, setCartId] = useState(null);
   const [openBayar, setOpenBayar] = useState(false);
   // jika ada yang draft
   useEffect(() => {
+    if (nowPrintSelected === null) {
+      alert("maaf anda belum melakukan pengaturan printer");
+      navigate("/dashboard");
+    }
     const fectData = async () => {
       //fetching
       const response = await api.get(`get-cart-draft`, {
@@ -27,7 +36,7 @@ function Pos() {
       if (response.status === 200) {
         //get response data
         const cart_data = await response.data.data;
-        
+
         if (Object.keys(cart_data).length !== 0) {
           SetCart(cart_data);
         }
@@ -64,9 +73,9 @@ function Pos() {
                   "Content-Type": "application/json",
                   Accept: "application/json",
                 },
-              }
+              },
             ); // Gantilah URL dengan API
-            // setData(response.data); 
+            // setData(response.data);
             // console.log(response.data.barang_master);
             const draftCart = response.data.barang_master;
             const draftDataCart = {
@@ -104,10 +113,7 @@ function Pos() {
         const audio = new Audio("sounds/error-sound.mp3");
         audio.volume = 1;
         audio.play();
-        toast.error("Data sudah ada.", {
-          autoClose: 5000, // Durasi toast muncul dalam milidetik
-        });
-        // console.log("ID sudah ada, item tidak ditambahkan");
+        swalError("Opps", "Data sudah ada, Silahkan untuk menambah QTY");
       }
     }
   };
@@ -164,9 +170,15 @@ function Pos() {
         <td>
           <input
             value={item.cart_qty}
-            type="number"
+            type="text"
             name="cart_qty"
-            onChange={(event) => handleInputChange(index, event)}
+            onChange={(event) => {
+              const value = event.target.value;
+              // Hanya angka dan satu titik
+              if (/^\d*\.?\d*$/.test(value)) {
+                handleInputChange(index, event);
+              }
+            }}
             className="input-qty"
             required
           ></input>
@@ -202,10 +214,11 @@ function Pos() {
   // handle submit
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const isConfirmed = window.confirm(
-      "Apakah Anda yakin ingin menyimpan data ini?"
+    const result = await swalConfirm(
+      "Yakin ?",
+      "Akan memasukkan ke keranjang ?",
     );
-    if (isConfirmed) {
+    if (result.isConfirmed) {
       // toas
       const toastId = toast.loading("Sending data...");
       // console.log(sortedCart);
@@ -213,6 +226,7 @@ function Pos() {
         const params = {
           keranjang: sortedCart,
         };
+        // console.log(params);
         const response = await api.post("/api-store-cart-data", params, {
           headers: {
             Authorization: `Bearer ${token}`, // Sisipkan token di header
@@ -222,16 +236,30 @@ function Pos() {
         });
         if (response.status === 200) {
           if (response.data.success === false) {
-            toast.update(toastId, {
-              render: response.data.message,
-              type: "error",
-              isLoading: false,
-              autoClose: 3000,
-            });
+            if (
+              response.data.message === "Sukses Keranjang anda sudah kosong.."
+            ) {
+              toast.update(toastId, {
+                render: response.data.message,
+                type: "success",
+                isLoading: false,
+                autoClose: 3000,
+              });
+              // hapus cart data
+              SetCart([]);
+            } else {
+              toast.update(toastId, {
+                render: response.data.message,
+                type: "error",
+                isLoading: false,
+                autoClose: 3000,
+              });
+            }
           } else {
             // open modal bayar
             setOpenBayar(true);
             setCartId(response.data.cart_id);
+            // api-store-cart-data
             // console.log(response.data);
             toast.update(toastId, {
               render: "Sukses menambah ke keranjang",
