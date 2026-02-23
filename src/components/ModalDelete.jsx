@@ -1,72 +1,94 @@
 import React, { useState, useEffect } from "react";
 import { getToken } from "../utilities/Auth";
+import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
-import { QZTrayProvider, useQZTray } from "./QZTrayContext";
-import PrintBluethoot from "../utilities/PrintBluethoot";
 import RupiahFormat from "../utilities/RupiahFormat";
-import PilihPrint from "../utilities/PilihPrint";
-import dayjs from "dayjs";
-import "dayjs/locale/id";
-import { Link } from "react-router-dom";
-import {
-  swalError,
-  swalLoading,
-  swalSuccess,
-  swalSuccessAutoClose,
-} from "../utilities/Swal";
+import { swalConfirm, swalError, swalSuccess } from "../utilities/Swal";
 
-function ModalListCart({ isOpen, cartId }) {
+function ModalDelete({ isOpen, cartId, stateTable, setStModalDelete }) {
   //
   const [notaData, setNotaData] = useState([]);
-  const [openModal, setOpenModal] = useState(isOpen);
+  const [trans, setTrans] = useState([]);
   //
   const detailNota = async () => {
+    let params = { cart_id: cartId };
     try {
-      swalLoading("Silahkan tunggu...", "Sedang mendapatkan data");
+      const toastId = toast.loading("Getting data...");
       const token = getToken();
-      const response = await api.get(`list-cart-data?cart_id=${cartId}`, {
+      const response = await api.post(`detail-nota`, params, {
         headers: {
           Authorization: `Bearer ${token}`, // Sisipkan token di header
         },
       });
       if (response.data.success) {
-        swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
-        setNotaData(response.data.rs_cart);
+        toast.update(toastId, {
+          render: "Berhasil mendapatkan data nota",
+          type: "success",
+          isLoading: false,
+          autoClose: 1000,
+        });
+        setNotaData(response.data.data);
+        setTrans(response.data.transaksiCart);
       }
       // console.log(response.data.data);
     } catch (error) {
-      swalError(
-        "Opps..!",
-        error?.response?.data?.message || error.message || "Terjadi kesalahan",
-      );
+      console.log(error);
     }
   };
 
   useEffect(() => {
     detailNota();
   }, []);
-  let grandTotal = 0;
 
-  const handleClose = () => {
-    setOpenModal(!openModal);
+  //
+  let grandTotal = 0;
+  const handleDelete = async (event) => {
+    event.preventDefault();
+    const result = await swalConfirm(
+      "Apakah anda yakin akan menghapus data ini? ",
+      "Silahkan pastikan terlebih dahulu",
+    );
+    if (result.isConfirmed) {
+      try {
+        const token = getToken();
+        const params = { cart_id: cartId };
+        const response = await api.post(`delete-transaksi`, params, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sisipkan token di header
+          },
+        });
+        if (response.data.success) {
+          setStModalDelete(false);
+          stateTable();
+          swalSuccess("Sukses", response.data.message);
+        } else {
+          swalError("Opps..!", response.data.message);
+        }
+        console.log(notaData);
+      } catch (error) {}
+    }
   };
 
-  if (!openModal) return null;
+  const hanldeClose = () => {
+    setStModalDelete(false);
+  };
+  //
+  if (!isOpen) return null;
   return (
     <>
       {notaData.length >= 1 && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 font-poppins">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-          <div className="bg-white w-[90%] md:w-[50%] h-[90%] p-6 rounded-lg shadow-lg relative z-10">
-            <h2 className="text-base md:text-lg font-bold mb-4 text-black">
-              Detail Keranjang
+          <div className="bg-white w-[90%] md:w-1/2 h-auto p-6 rounded-lg shadow-lg relative z-10">
+            <h2 className="text-lg md:text-xl font-bold mb-4 text-red-600 font-poppins">
+              Delete Pembelian
             </h2>
             <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
             <div className="w-full overflow-auto">
-              <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
+              <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base font-poppins">
                 <thead>
                   <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
-                    <th className="w-5 px-1 py-3 border border-gray-200">No</th>
+                    <th className="px-1 py-3 border border-gray-200">No</th>
                     <th className="px-1 py-3 border border-gray-200">
                       Nama Barang
                     </th>
@@ -115,22 +137,44 @@ function ModalListCart({ isOpen, cartId }) {
                       {RupiahFormat(grandTotal)}
                     </td>
                   </tr>
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-3 border border-gray-200 text-right"
+                    >
+                      Cash
+                    </td>
+                    <td className="px-6 py-3 border border-gray-200 text-right">
+                      {RupiahFormat(trans.trans_bayar)}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      colSpan="4"
+                      className="px-6 py-3 border border-gray-200 text-right"
+                    >
+                      Kembalian
+                    </td>
+                    <td className="px-6 py-3 border border-gray-200 text-right">
+                      {RupiahFormat(trans.trans_kembalian)}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
             <div className="flex justify-between mt-5">
               <button
                 className="px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
-                onClick={handleClose}
+                onClick={hanldeClose}
               >
                 Close
               </button>
               <button
-                // onClick={() => handlePrint()}
+                onClick={handleDelete}
                 type="submit"
-                className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
+                className="px-2 md:px-4 py-1 md:py-2 bg-red-600 font-poppins text-colorGray rounded hover:bg-red-500"
               >
-                <i className="fa fa-print"></i> Cetak
+                <i className="fa fa-trash"></i> Hapus
               </button>
             </div>
           </div>
@@ -140,4 +184,4 @@ function ModalListCart({ isOpen, cartId }) {
   );
 }
 
-export default ModalListCart;
+export default ModalDelete;

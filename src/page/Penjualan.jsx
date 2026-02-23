@@ -13,6 +13,8 @@ import {
   swalSuccess,
   swalSuccessAutoClose,
 } from "../utilities/Swal";
+import ModalRetur from "../components/ModalRetur";
+import ModalDelete from "../components/ModalDelete";
 
 const Penjualan = () => {
   // state
@@ -29,7 +31,7 @@ const Penjualan = () => {
         },
       });
       setDataTransaksi(response.data.data || []);
-      swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 1000);
+      swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
     } catch (error) {
       swalError(
         "Opps..!",
@@ -48,9 +50,21 @@ const Penjualan = () => {
 
   // modal nota
   const [stModal, setStModal] = useState(false);
+  const [stModalRetur, setStModalRetur] = useState(false);
+  const [stModalDelete, setStModalDelete] = useState(false);
   const [cartId, setCartId] = useState(null);
   const handleNota = (cart_id) => {
     setStModal(!stModal);
+    setCartId(cart_id);
+  };
+
+  const handleRetur = (cart_id) => {
+    setStModalRetur(!stModalRetur);
+    setCartId(cart_id);
+  };
+
+  const handleDelete = (cart_id) => {
+    setStModalDelete(!stModalDelete);
     setCartId(cart_id);
   };
 
@@ -59,8 +73,16 @@ const Penjualan = () => {
   };
 
   return (
-    <div className="h-[86%]">
-      <div className="h-full overflow-auto p-10">
+    <div className="">
+      <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+        <div className="flex justify-end">
+          <Link
+            to={"/dashboard"}
+            className="font-poppins rounded-sm bg-colorPrimary text-white px-2 py-1 text-xs md:text-sm"
+          >
+            <i className="fa fa-arrow-left"></i> Home
+          </Link>
+        </div>
         <div className="grid grid-cols-3 gap-4 text-center font-poppins">
           <Link
             to={"/penjualan"}
@@ -135,14 +157,15 @@ const Penjualan = () => {
                   >
                     <i className="fa fa-print"></i>
                   </button>
-                  <button
-                    onClick={() => handleNota(val.cart_id)}
+                  <Link
+                    onClick={() => handleRetur(val.cart_id)}
+                    title="Retur"
                     className="px-2 py-1 text-white my-1 md:my-0 mx-0 md:mx-2 bg-green-500 hover:bg-green-600 rounded"
                   >
                     <i className="fa fa-undo"></i>
-                  </button>
+                  </Link>
                   <button
-                    onClick={() => handleNota(val.cart_id)}
+                    onClick={() => handleDelete(val.cart_id)}
                     className="px-2 py-1 text-white bg-red-500 hover:bg-red-600 rounded"
                   >
                     <i className="fa fa-trash"></i>
@@ -156,6 +179,22 @@ const Penjualan = () => {
       <ToastContainer />
       {stModal && (
         <ModalDetailNota isOpen={true} onClose={handleNota} cartId={cartId} />
+      )}
+      {stModalRetur && (
+        <ModalRetur
+          isOpen={true}
+          cartId={cartId}
+          stateTable={getDataTransaksi}
+          setStModalRetur={setStModalRetur}
+        />
+      )}
+      {stModalDelete && (
+        <ModalDelete
+          isOpen={stModalDelete}
+          cartId={cartId}
+          stateTable={getDataTransaksi}
+          setStModalDelete={setStModalDelete}
+        />
       )}
     </div>
   );

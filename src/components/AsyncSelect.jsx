@@ -80,7 +80,7 @@ const AsyncSelect = ({ sendDataToParent }) => {
             "Content-Type": "application/json", // Menambahkan header Content-Type jika diperlukan
             // Header lainnya bisa ditambahkan sesuai kebutuhan
           },
-        }
+        },
       );
 
       if (Object.keys(response.data).length !== 0) {
@@ -101,10 +101,10 @@ const AsyncSelect = ({ sendDataToParent }) => {
 
   return (
     <div>
-      <div className="flex gap-5 mb-2">
+      <div className="flex gap-2 md:gap-5 mb-2">
         <button
           onClick={() => aturInput("barcode")}
-          className={`cursor-pointer py-1 px-2 ${
+          className={`cursor-pointer py-1 px-2 text-xs md:text-base ${
             stBarcode ? "active" : "inactive"
           }`}
         >
@@ -112,7 +112,7 @@ const AsyncSelect = ({ sendDataToParent }) => {
         </button>
         <button
           onClick={() => aturInput("manual")}
-          className={`cursor-pointer py-1 px-2 inactive ${
+          className={`cursor-pointer py-1 px-2 inactive text-xs md:text-base ${
             stManual ? "active" : "inactive"
           } `}
         >
@@ -135,7 +135,7 @@ const AsyncSelect = ({ sendDataToParent }) => {
       )}
       {stBarcode && (
         <input
-          className="border border-colorPrimary w-full py-2 px-2 rounded-sm "
+          className="border border-colorPrimary w-full text-sm md:text-base py-1 md:py-2 px-2 rounded-sm "
           autoFocus
           value={valBarcode}
           placeholder="Barcode"

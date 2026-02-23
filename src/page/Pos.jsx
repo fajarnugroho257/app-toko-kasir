@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import RupiahFormat from "../utilities/RupiahFormat";
 import api from "../utilities/axiosInterceptor";
 import ModalPembayaran from "../components/ModalPembeyaran";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { swalConfirm, swalError } from "../utilities/Swal";
 
 function Pos() {
@@ -304,15 +304,23 @@ function Pos() {
   };
   // console.log(cart_id);
   return (
-    <div className="px-5 py-3 h-[86%] font-poppins">
-      <div className="grid grid-rows-[auto,auto,330px] md:grid-rows-[auto,auto,400px] lg:grid-rows-[auto,auto,450px] h-full">
+    <div className="px-5 py-14 h-full flex flex-col font-poppins">
+      <div className="flex justify-between">
+        <div className="mb-1">
+          <span className="text-colorPrimary font-semibold text-sm md:text-xl">
+            <i className="fa fa-plus"></i> Tambah Item
+          </span>
+        </div>
+        <Link
+          to={"/dashboard"}
+          className="font-poppins rounded-sm bg-colorPrimary text-white px-2 py-1 text-sm"
+        >
+          <i className="fa fa-arrow-left"></i> Home
+        </Link>
+      </div>
+      <div className="flex flex-col flex-1 min-h-0">
         <div className="bg-white md:grid md:grid-cols-2 gap-5 md:my-4">
-          <div className="my-4 md:my-0">
-            <div className="mb-1">
-              <span className="text-colorPrimary font-semibold text-sm md:text-xl">
-                <i className="fa fa-plus"></i> Tambah Item
-              </span>
-            </div>
+          <div className="my-1 md:my-0">
             <ToastContainer />
             <AsyncSelect sendDataToParent={dataCart} />
           </div>
@@ -334,12 +342,9 @@ function Pos() {
             <i className="fa fa-shopping-cart"></i> Keranjang
           </span>
         </div>
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-rows-[1fr,auto] h-full"
-        >
-          <div className="overflow-auto mt-2">
-            <table className="table-auto border-collapse w-[110%] md:w-full text-xs md:text-xl">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 overflow-auto mt-2 bg-white rounded">
+            <table className="min-w-[900px] w-full text-xs md:text-sm">
               <thead>
                 <tr>
                   <th className="w-[5%]">No</th>
@@ -362,9 +367,9 @@ function Pos() {
           </div>
           <button
             type="submit"
-            className="bg-yellow-500 text-white py-2 mt-2 text-sm md:text-lg"
+            className="sticky bottom-0 bg-yellow-500 text-white py-1 mt-2 text-sm md:text-lg shadow-lg z-40"
           >
-            Masukkan Keranjang
+            <i className="fa fa-cart-shop"></i> Masukkan Keranjang
           </button>
         </form>
       </div>

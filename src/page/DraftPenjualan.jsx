@@ -10,11 +10,14 @@ import {
   swalSuccess,
   swalSuccessAutoClose,
 } from "../utilities/Swal";
+import ModalListCart from "../components/ModalListCart";
 
 const DraftPenjualan = () => {
   const navigate = useNavigate();
   const [tab, setTab] = useState("draft");
   const [dataTransaksi, setDataTransaksi] = useState([]);
+  const [stModalList, setStModalList] = useState(false);
+  const [cartId, setCartId] = useState(null);
 
   const handleTab = (tabStatus) => {
     setTab(tabStatus);
@@ -34,7 +37,7 @@ const DraftPenjualan = () => {
         },
       );
       setDataTransaksi(response.data.data || []);
-      swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 1000);
+      swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
     } catch (error) {
       swalError(
         "Opps..!",
@@ -71,10 +74,26 @@ const DraftPenjualan = () => {
       }
     } catch (error) {}
   };
+
+  const handleListCart = (cart_id) => {
+    setCartId(cart_id);
+    setStModalList(!stModalList);
+  };
+
   return (
     <>
-      <div className="h-[86%]">
-        <div className="h-full overflow-auto p-10">
+      <div className="">
+        <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+          <div className="flex justify-end">
+            <div className="flex justify-end">
+              <Link
+                to={"/dashboard"}
+                className="font-poppins rounded-sm bg-colorPrimary text-white px-2 py-1 text-xs md:text-sm"
+              >
+                <i className="fa fa-arrow-left"></i> Home
+              </Link>
+            </div>
+          </div>
           <div className="grid grid-cols-3 gap-4 text-center font-poppins">
             <Link
               to={"/penjualan"}
@@ -140,19 +159,24 @@ const DraftPenjualan = () => {
                   <td className="px-6 py-3 border border-gray-200">
                     {val.cart_draft.draft_note}
                   </td>
-                  <td className="px-6 py-3 border border-gray-200 text-sm text-center">
-                    <button
+                  <td className="px-2 py-3 border border-gray-200 text-base md:text-xl text-center">
+                    <Link
+                      onClick={() => handleListCart(val.cart_id)}
+                      title="Lihat Data Barang"
+                      className="fa fa-eye text-colorPrimary md:mr-3"
+                    ></Link>
+                    <Link
                       onClick={() => hanldeTransaksi(val.cart_id)}
-                      className="bg-colorPrimary rounded-sm text-white py-2 px-1 w-20"
-                    >
-                      Transaksi <i className="fa fa-play"></i>
-                    </button>
+                      title="Ubah Data / Lanjutkan Transaksi"
+                      className="fa fa-shopping-cart text-red-600 md:mr-3"
+                    ></Link>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        {stModalList && <ModalListCart isOpen={true} cartId={cartId} />}
       </div>
     </>
   );

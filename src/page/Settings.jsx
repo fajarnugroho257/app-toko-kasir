@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Setting = () => {
   //
@@ -10,10 +11,10 @@ const Setting = () => {
       window.location.reload();
       setSelected(val);
       localStorage.setItem("printSelected", val);
-    } else if(val === "bluethoot") {
+    } else if (val === "bluethoot") {
       selectPrinter(val);
     }
-    
+
     // console.log("Perangkat ditemukan ya:", device.name);
   };
 
@@ -23,17 +24,27 @@ const Setting = () => {
       acceptAllDevices: true,
       optionalServices: ["000018f0-0000-1000-8000-00805f9b34fb"],
     });
-    
+
     localStorage.setItem("printerDeviceId", device.id);
     localStorage.setItem("printerName", device.name);
     setSelected(val);
     localStorage.setItem("printSelected", val);
-    // 
+    //
   }
 
   return (
-    <div className="px-5 py-3 h-[86%]">
-      <div className="h-full overflow-auto p-3">
+    <div className="">
+      <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+        <div className="flex justify-end">
+          <div className="flex justify-end">
+            <Link
+              to={"/dashboard"}
+              className="font-poppins rounded-sm bg-colorPrimary text-white px-2 py-1 text-xs md:text-sm"
+            >
+              <i className="fa fa-arrow-left"></i> Home
+            </Link>
+          </div>
+        </div>
         <table className="w-full md:w-1/2 md:mx-auto border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
           <thead>
             <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">

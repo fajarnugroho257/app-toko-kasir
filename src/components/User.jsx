@@ -4,6 +4,7 @@ import Logout from "../utilities/Logount";
 
 function User() {
   const [isOpen, setIsOpen] = useState(false);
+  const name = localStorage.getItem("name");
   const dropdownRef = useRef(null); // Ref untuk komponen dropdown
 
   const toggleUser = () => {
@@ -28,19 +29,15 @@ function User() {
   return (
     <div>
       <div className="relative" ref={dropdownRef}>
-        <i onClick={toggleUser} className="fa fa-user cursor-pointer"></i>
+        <div onClick={toggleUser} className="cursor-pointer">
+          <i className="fa fa-user"></i> {name}
+        </div>
         <div
           className={`absolute transition-transform transform ${
             isOpen ? "block" : "hidden"
           } bg-white border border-colorPrimary text-colorPrimary font-poppins w-36 rounded-md -right-4`}
         >
           <div className="px-3 py-4 text-sm">
-            <Link to="/login" className="pb-2 w-fit block">
-              Profil
-            </Link>
-            <Link to="/login" className=" w-fit block">
-              Profil
-            </Link>
             <Logout />
           </div>
         </div>

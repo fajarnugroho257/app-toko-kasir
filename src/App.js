@@ -12,57 +12,55 @@ import Penjualan from "./page/Penjualan";
 import Setting from "./page/Settings";
 import DraftPenjualan from "./page/DraftPenjualan";
 import Hutang from "./page/Hutang";
+import HeaderCopy from "./components/HeaderCopy";
 
 function App() {
   const location = useLocation();
   const uri = location.pathname;
+  const status = uri === "/login" || uri === "/" ? "hidden" : "";
   return (
     <div className="h-screen">
-      <div
-        className={`${uri === "/login" || uri === "/" ? "hidden" : ""}  h-[7%]`}
-      >
-        <Header pageName="Pembelian" />
-      </div>
-      <Routes>
-        <Route
-          path="/login"
-          element={<AuthRoute element={<Login />} isPrivate={false} />}
-        />
-        <Route
-          path="/"
-          element={<AuthRoute element={<Splash />} isPrivate={false} />}
-        />
-        {/* route yang di authentikasi */}
-        <Route
-          path="/dashboard"
-          element={<AuthRoute element={<Dashboard />} isPrivate={true} />}
-        />
-        <Route
-          path="/pos"
-          element={<AuthRoute element={<Pos />} isPrivate={true} />}
-        />
-        <Route
-          path="/penjualan"
-          element={<AuthRoute element={<Penjualan />} isPrivate={true} />}
-        />
-        <Route
-          path="/settings"
-          element={<AuthRoute element={<Setting />} isPrivate={true} />}
-        />
-        <Route
-          path="/hutang"
-          element={<AuthRoute element={<Hutang />} isPrivate={true} />}
-        />
-        <Route
-          path="/draft-penjualan"
-          element={<AuthRoute element={<DraftPenjualan />} isPrivate={true} />}
-        />
-      </Routes>
-      <div
-        className={`${uri === "/login" || uri === "/" ? "hidden" : ""} h-[7%]`}
-      >
-        <Footer />
-      </div>
+      <Header status={status} />
+      <main className="pt-[60px] pb-[60px] h-screen flex flex-col">
+        <Routes>
+          <Route
+            path="/login"
+            element={<AuthRoute element={<Login />} isPrivate={false} />}
+          />
+          <Route
+            path="/"
+            element={<AuthRoute element={<Splash />} isPrivate={false} />}
+          />
+          {/* route yang di authentikasi */}
+          <Route
+            path="/dashboard"
+            element={<AuthRoute element={<Dashboard />} isPrivate={true} />}
+          />
+          <Route
+            path="/pos"
+            element={<AuthRoute element={<Pos />} isPrivate={true} />}
+          />
+          <Route
+            path="/penjualan"
+            element={<AuthRoute element={<Penjualan />} isPrivate={true} />}
+          />
+          <Route
+            path="/settings"
+            element={<AuthRoute element={<Setting />} isPrivate={true} />}
+          />
+          <Route
+            path="/hutang"
+            element={<AuthRoute element={<Hutang />} isPrivate={true} />}
+          />
+          <Route
+            path="/draft-penjualan"
+            element={
+              <AuthRoute element={<DraftPenjualan />} isPrivate={true} />
+            }
+          />
+        </Routes>
+      </main>
+      <Footer status={status} />
     </div>
   );
 }

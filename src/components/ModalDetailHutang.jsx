@@ -32,7 +32,7 @@ function ModalDetailHutang({ isOpen, onClose, cartId, loadData }) {
         },
       });
       if (response.data.success) {
-        swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 1000);
+        swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
         setNotaData(response.data.rs_cart);
         setCartDraft(response.data.cart_draft);
         setRows(response.data.cart_draft.tagihan_cicilan);
@@ -88,7 +88,6 @@ function ModalDetailHutang({ isOpen, onClose, cartId, loadData }) {
       (sum, row) => sum + (parseFloat(row.uang) || 0),
       0,
     );
-    const sisaTagihan = tagihan - totalCicilan;
     const payload = {
       detail_cicilan: rows,
       cart_draft_id: cartDraft.id,
