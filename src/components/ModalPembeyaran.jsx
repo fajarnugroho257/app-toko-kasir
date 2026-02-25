@@ -5,6 +5,7 @@ import { QZTrayProvider, useQZTray } from "./QZTrayContext";
 import PrintBluethootPos from "../utilities/PrintBluethootPos";
 import ModalAddDraf from "./ModalAddDraft";
 import ModalAddHutang from "./ModalAddHutang";
+import { swalError } from "../utilities/Swal";
 
 function ModalPembayaran({
   isOpen,
@@ -219,11 +220,17 @@ function ModalPembayaran({
   const handleStoreBayar = async () => {
     // alert(cart_id);
     if (valInputBayar <= 0) {
-      alert("Nilai pembayaran wajib diisi");
+      swalError(
+        "Opps.!",
+        "Nilai pembayaran wajib diisi, Atau pilih hutang / draft ",
+      );
       return;
     }
     if (kembalian < 0) {
-      alert("Pembayaran Kurang dari Tagihan");
+      swalError(
+        "Opps.!",
+        "Pembayaran Kurang dari Tagihan, Atau pilih hutang / draft",
+      );
       return;
     }
     // toas

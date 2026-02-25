@@ -15,7 +15,7 @@ import {
   swalSuccessAutoClose,
 } from "../utilities/Swal";
 
-function ModalListCart({ isOpen, cartId }) {
+function ModalListCart({ isOpen, onClose, cartId }) {
   //
   const [notaData, setNotaData] = useState([]);
   const [openModal, setOpenModal] = useState(isOpen);
@@ -48,6 +48,7 @@ function ModalListCart({ isOpen, cartId }) {
   let grandTotal = 0;
 
   const handleClose = () => {
+    onClose();
     setOpenModal(!openModal);
   };
 

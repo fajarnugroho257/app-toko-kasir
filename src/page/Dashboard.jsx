@@ -128,7 +128,7 @@ function Pembayaran() {
                   <img src={iconLogout} className="w-4/6" alt="iconLogout" />
                 </div>
                 <h3 className="text-center mt-3 text-gray-800 font-poppins font-semibold text-sm md:text-lg lg:text-2xl">
-                  LOGOUT
+                  Logout
                 </h3>
               </div>
             </div>

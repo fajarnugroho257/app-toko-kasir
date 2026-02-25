@@ -13,6 +13,7 @@ import Setting from "./page/Settings";
 import DraftPenjualan from "./page/DraftPenjualan";
 import Hutang from "./page/Hutang";
 import HeaderCopy from "./components/HeaderCopy";
+import Laporan from "./page/Laporan";
 
 function App() {
   const location = useLocation();
@@ -57,6 +58,10 @@ function App() {
             element={
               <AuthRoute element={<DraftPenjualan />} isPrivate={true} />
             }
+          />
+          <Route
+            path="/laporan"
+            element={<AuthRoute element={<Laporan />} isPrivate={true} />}
           />
         </Routes>
       </main>

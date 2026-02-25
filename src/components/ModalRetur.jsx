@@ -143,26 +143,32 @@ function ModalRetur({ isOpen, cartId, stateTable, setStModalRetur }) {
   };
 
   const handleDeleteRetur = async (returId) => {
-    try {
-      const token = getToken();
-      const params = { retur_id: returId };
-      const response = await api.post(`delete-retur`, params, {
-        headers: {
-          Authorization: `Bearer ${token}`, // Sisipkan token di header
-        },
-      });
-      if (response.data.success) {
-        swalSuccess("Sukses", response.data.message);
-        setUbahData(true);
-        detailNota();
-        if (response.data.ttl <= 0) {
-          setModalHistory(false);
+    const result = await swalConfirm(
+      "Yakin ?",
+      "Apakah Anda yakin ingin menghapus data ini?",
+    );
+    if (result.isConfirmed) {
+      try {
+        const token = getToken();
+        const params = { retur_id: returId };
+        const response = await api.post(`delete-retur`, params, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Sisipkan token di header
+          },
+        });
+        if (response.data.success) {
+          swalSuccess("Sukses", response.data.message);
+          setUbahData(true);
+          detailNota();
+          if (response.data.ttl <= 0) {
+            setModalHistory(false);
+          }
+        } else {
+          swalError("Opps..!", response.data.message);
         }
-      } else {
-        swalError("Opps..!", response.data.message);
-      }
-      // console.log(notaData);
-    } catch (error) {}
+        // console.log(notaData);
+      } catch (error) {}
+    }
   };
   //
   if (!isOpen) return null;

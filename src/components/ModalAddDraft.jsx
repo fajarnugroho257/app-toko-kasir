@@ -93,7 +93,7 @@ function ModalAddDraf({
           },
         });
         //
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data.success) {
           // delete cart
           close();
@@ -284,7 +284,7 @@ function ModalAddDraf({
             </button>
             <button
               type="submit"
-              className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
+              className="px-2 md:px-4 py-1 md:py-2 bg-blue-600 font-poppins text-colorGray rounded hover:bg-blue-500"
             >
               <i className="fa fa-save"></i> Simpan Draft
             </button>

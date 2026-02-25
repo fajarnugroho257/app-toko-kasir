@@ -31,7 +31,7 @@ const Logout = () => {
 
   return (
     <button onClick={handleLogout} className="font-poppins font-semibold">
-      <i class="fa fa-power-off"></i> Logout
+      <i className="fa fa-power-off"></i> Logout
     </button>
   );
 };
