@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
 import Booking from "./Booking";
 import { swalConfirm } from "../utilities/Swal";
+import PilihPrintHutang from "../utilities/PilihPrintHutang";
 
 function ModalAddHutang({
   close,
@@ -100,6 +101,10 @@ function ModalAddHutang({
             isLoading: false,
             autoClose: 2000,
           });
+          // PilihPrintHutang(
+          //   notaData,
+          //   cartDraft
+          // )
         } else {
           toast.update(toastId, {
             render: `${response.data.message}`,

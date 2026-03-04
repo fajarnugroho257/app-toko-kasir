@@ -41,8 +41,8 @@ const Penjualan = () => {
       );
       setDataTransaksi(response.data.data || []);
       swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
-      const dataTanggal = { start, end };
-      localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
+      // const dataTanggal = { start, end };
+      // localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
     } catch (error) {
       swalError(
         "Opps..!",
@@ -51,14 +51,36 @@ const Penjualan = () => {
     }
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("filterTanggal");
-    let parsed = {};
-    if (saved) {
-      parsed = JSON.parse(saved);
-      setTanggal(parsed);
+  const isSameDate = (date1, date2) => {
+    return new Date(date1).toDateString() === new Date(date2).toDateString();
+  };
+
+  const reloadGetDataTransaksi = () => {
+    const savedTanggal = localStorage.getItem("filterTanggal");
+    // const today = new Date().toISOString().split("T")[0];
+    let tanggalFix;
+    if (savedTanggal) {
+      // const parsed = JSON.parse(savedTanggal);
+      // // Kalau end bukan hari ini → reset ke default
+      // if (!isSameDate(parsed.end, today)) {
+      //   tanggalFix = getDefaultTanggal();
+      //   localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+      // } else {
+      //   tanggalFix = parsed;
+      // }
+      // 
+      tanggalFix = JSON.parse(savedTanggal);
+    } else {
+      tanggalFix = getDefaultTanggal();
+      localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
     }
-    getDataTransaksi(parsed.start, parsed.end);
+
+    setTanggal(tanggalFix);
+    getDataTransaksi(tanggalFix.start, tanggalFix.end);
+  }
+
+  useEffect(() => {
+    reloadGetDataTransaksi();
   }, []);
 
   const formatDate = (dateString) => {
@@ -95,11 +117,11 @@ const Penjualan = () => {
     const start = formData.get("start");
     const end = formData.get("end");
     const dataTanggal = { start, end };
-    // localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
     // simpan ke state
     setTanggal(dataTanggal);
-    getDataTransaksi(start, end);
-    // fetch data
+    // simpan ke localStorage
+    localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
+    reloadGetDataTransaksi();
   };
 
   const formatDateLocal = (date) => {
@@ -120,9 +142,10 @@ const Penjualan = () => {
   };
 
   const handleReset = () => {
-    const resTgl = getDefaultTanggal();
-    setTanggal({ start: resTgl.start, end: resTgl.end });
-    getDataTransaksi(resTgl.start, resTgl.end);
+    let tanggalFix = getDefaultTanggal();
+    localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+    setTanggal({ start: tanggalFix.start, end: tanggalFix.end });
+    reloadGetDataTransaksi();
   };
 
   let ttlBelanja = 0;
@@ -310,7 +333,7 @@ const Penjualan = () => {
         <ModalRetur
           isOpen={true}
           cartId={cartId}
-          stateTable={getDataTransaksi}
+          stateTable={reloadGetDataTransaksi}
           setStModalRetur={setStModalRetur}
         />
       )}
@@ -318,7 +341,7 @@ const Penjualan = () => {
         <ModalDelete
           isOpen={stModalDelete}
           cartId={cartId}
-          stateTable={getDataTransaksi}
+          stateTable={reloadGetDataTransaksi}
           setStModalDelete={setStModalDelete}
         />
       )}

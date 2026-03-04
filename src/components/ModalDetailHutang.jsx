@@ -144,16 +144,23 @@ function ModalDetailHutang({ isOpen, onClose, cartId, loadData }) {
   return (
     <>
       {notaData.length >= 1 && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 font-poppins">
-          <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-          <div className="bg-white w-[90%] md:w-[80%] h-[90%] p-6 rounded-lg shadow-lg relative z-10">
-            <h2 className="text-base md:text-lg font-bold mb-4 text-black">
-              Detail Hutang
-            </h2>
-            <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="w-full overflow-auto">
-                <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
+        <div className="fixed inset-0 flex items-center justify-center z-50 font-poppins p-4">
+          <div className="absolute inset-0 bg-gray-900 opacity-50" onClick={onclose}></div>
+
+          {/* Modal Card */}
+          <div className="bg-white w-[95%] md:w-[80%] h-[90%] p-6 rounded-lg shadow-lg relative z-10 flex flex-col">
+            
+            {/* Header: Tetap di atas */}
+            <div className="flex-none">
+              <h2 className="text-base md:text-lg font-bold mb-2 text-black">
+                Detail Hutang / Cicilan
+              </h2>
+              <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="md:grid md:grid-cols-2 gap-4">
+                <table className="min-w-full border-collapse border border-gray-200 shadow-sm rounded-lg text-xs md:text-sm">
                   <thead>
                     <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
                       <th className="w-5 px-1 py-3 border border-gray-200">
@@ -213,133 +220,132 @@ function ModalDetailHutang({ isOpen, onClose, cartId, loadData }) {
                     </tr>
                   </tbody>
                 </table>
-              </div>
-              <div className="w-full overflow-auto">
                 <form action="" onSubmit={handleSimpan}>
-                  <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
-                    <thead>
-                      <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
-                        <th className="w-5 px-1 py-3 border border-gray-200">
-                          No
-                        </th>
-                        <th className="px-1 py-3 border border-gray-200">
-                          Tanggal
-                        </th>
-                        <th className="px-1 py-3 border border-gray-200">
-                          Uang Pembayaran
-                        </th>
-                        <th className="px-1 py-3 border border-gray-200"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        key="uangMuka"
-                        className={`border border-gray-200 hover:bg-gray-50`}
-                      >
-                        <td className="px-6 py-3 border border-gray-200 text-center">
-                          1
-                        </td>
-                        <td className="px-6 py-3 border border-gray-200 text-center">
-                          {formatDate(cartDraft.created_at)}
-                        </td>
-                        <td className="px-6 py-3 border border-gray-200 text-right">
-                          {cartDraft.draft_uang_muka === ""
-                            ? "Tidak ada uang muka"
-                            : cartDraft.draft_uang_muka}
-                        </td>
-                        <td className="px-3 border border-gray-200 text-center">
-                          <i className="fa fa-times text-gray-500"></i>
-                        </td>
-                      </tr>
-                      {rows.map((row, index) => (
-                        <tr key={index}>
+                    <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
+                      <thead>
+                        <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
+                          <th className="w-5 px-1 py-3 border border-gray-200">
+                            No
+                          </th>
+                          <th className="px-1 py-3 border border-gray-200">
+                            Tanggal
+                          </th>
+                          <th className="px-1 py-3 border border-gray-200">
+                            Uang Pembayaran
+                          </th>
+                          <th className="px-1 py-3 border border-gray-200"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          key="uangMuka"
+                          className={`border border-gray-200 hover:bg-gray-50`}
+                        >
                           <td className="px-6 py-3 border border-gray-200 text-center">
-                            {index + 2}
+                            1
                           </td>
                           <td className="px-6 py-3 border border-gray-200 text-center">
-                            <input
-                              type="date"
-                              className="border py-1 px-2 w-28 md:w-44"
-                              value={row.cicilan_date}
-                              onChange={(e) =>
-                                handleChange(
-                                  index,
-                                  "cicilan_date",
-                                  e.target.value,
-                                )
-                              }
-                              required
-                            />
+                            {formatDate(cartDraft.created_at)}
                           </td>
                           <td className="px-6 py-3 border border-gray-200 text-right">
-                            <input
-                              type="text"
-                              className="border py-1 px-2 w-24 text-right"
-                              value={row.cicilan}
-                              onChange={(e) =>
-                                handleChange(index, "cicilan", e.target.value)
-                              }
-                              required
-                            />
+                            {cartDraft.draft_uang_muka === ""
+                              ? "Tidak ada uang muka"
+                              : RupiahFormat(cartDraft.draft_uang_muka)}
                           </td>
                           <td className="px-3 border border-gray-200 text-center">
-                            <Link
-                              onClick={() => handleDeleteRow(index)}
-                              className="fa fa-times text-red-500"
-                            ></Link>
+                            <i className="fa fa-times text-gray-500"></i>
                           </td>
                         </tr>
-                      ))}
-                      <tr>
-                        <td
-                          colSpan="2"
-                          className="px-6 py-3 border border-gray-200 text-right"
+                        {rows.map((row, index) => (
+                          <tr key={index}>
+                            <td className="px-6 py-3 border border-gray-200 text-center">
+                              {index + 2}
+                            </td>
+                            <td className="px-6 py-3 border border-gray-200 text-center">
+                              <input
+                                type="date"
+                                className="border py-1 px-2 w-28 md:w-44"
+                                value={row.cicilan_date}
+                                onChange={(e) =>
+                                  handleChange(
+                                    index,
+                                    "cicilan_date",
+                                    e.target.value,
+                                  )
+                                }
+                                required
+                              />
+                            </td>
+                            <td className="px-6 py-3 border border-gray-200 text-right">
+                              <input
+                                type="text"
+                                className="border py-1 px-2 w-24 text-right"
+                                value={row.cicilan}
+                                onChange={(e) =>
+                                  handleChange(index, "cicilan", e.target.value)
+                                }
+                                required
+                              />
+                            </td>
+                            <td className="px-3 border border-gray-200 text-center">
+                              <Link
+                                onClick={() => handleDeleteRow(index)}
+                                className="fa fa-times text-red-500"
+                              ></Link>
+                            </td>
+                          </tr>
+                        ))}
+                        <tr>
+                          <td
+                            colSpan="2"
+                            className="px-6 py-3 border border-gray-200 text-right"
+                          >
+                            Kekurangan
+                          </td>
+                          <td className="px-6 py-3 border border-gray-200 text-right">
+                            Rp {sisaTagihan.toLocaleString("id-ID")}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div className="justify-between mt-3 gap-1 flex">
+                      <Link
+                        className="bg-red-600 w-20  h-8 text-white text-sm flex gap-1 items-center justify-center"
+                        title="Lunasi Transaksi"
+                        onClick={() => handleLunas()}
+                      >
+                        <i className="fa fa-check"></i> Lunas
+                      </Link>
+                      <div className="flex gap-2">
+                        <button
+                          type="submit"
+                          className="bg-blue-600 w-8 h-8 text-white"
+                          title="Simpan Cicilan"
                         >
-                          Kekurangan
-                        </td>
-                        <td className="px-6 py-3 border border-gray-200 text-right">
-                          Rp {sisaTagihan.toLocaleString("id-ID")}
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div className="justify-between mt-3 gap-1 flex">
-                    <Link
-                      className="bg-red-600 w-20  h-8 text-white text-sm flex gap-1 items-center justify-center"
-                      title="Lunasi Transaksi"
-                      onClick={() => handleLunas()}
-                    >
-                      <i className="fa fa-check"></i> Lunas
-                    </Link>
-                    <div className="flex gap-2">
-                      <button
-                        type="submit"
-                        className="bg-blue-600 w-8 h-8 text-white"
-                        title="Simpan Cicilan"
-                      >
-                        <i className="fa fa-save"></i>
-                      </button>
-                      <button
-                        className="bg-colorPrimary w-8 h-8 text-white"
-                        title="Tambah Cicilan"
-                        onClick={() => handleAddRow()}
-                      >
-                        <i className="fa fa-plus"></i>
-                      </button>
+                          <i className="fa fa-save"></i>
+                        </button>
+                        <button
+                          className="bg-colorPrimary w-8 h-8 text-white"
+                          title="Tambah Cicilan"
+                          onClick={() => handleAddRow()}
+                        >
+                          <i className="fa fa-plus"></i>
+                        </button>
+                      </div>
                     </div>
-                  </div>
                 </form>
               </div>
             </div>
-            <div className="flex justify-between mt-5">
+            {/* Footer: Tetap di bawah */}
+            <div className="flex-none flex justify-between mt-5 pt-4 border-t">
               <button
-                className="px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
+                className="px-4 py-2 bg-gray-200 border border-gray-300 font-bold text-black rounded hover:bg-gray-300 transition-colors"
                 onClick={onClose}
               >
                 Close
               </button>
               <button
-                // onClick={() => handlePrint()}
+                // onClick={() => handlePrintDraft()}
                 type="submit"
                 className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
               >

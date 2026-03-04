@@ -11,7 +11,7 @@ import {
   swalLoading,
   swalSuccessAutoClose,
 } from "../utilities/Swal";
-import ModalListCart from "../components/ModalListCart";
+import ModalListCartHutang from "../components/ModalListCartHutang";
 
 const Hutang = () => {
   // state
@@ -38,8 +38,6 @@ const Hutang = () => {
       );
       setDataTransaksi(response.data.data || []);
       swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
-      const dataTanggal = { start, end };
-      localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
     } catch (error) {
       swalError(
         "Opps..!",
@@ -48,14 +46,36 @@ const Hutang = () => {
     }
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("filterTanggal");
-    let parsed = {};
-    if (saved) {
-      parsed = JSON.parse(saved);
-      setTanggal(parsed);
+  // const isSameDate = (date1, date2) => {
+  //   return new Date(date1).toDateString() === new Date(date2).toDateString();
+  // };
+
+  const reloadGetDataTransaksi = () => {
+    const savedTanggal = localStorage.getItem("filterTanggal");
+    // const today = new Date().toISOString().split("T")[0];
+    let tanggalFix;
+    if (savedTanggal) {
+      // const parsed = JSON.parse(savedTanggal);
+      // // Kalau end bukan hari ini → reset ke default
+      // if (!isSameDate(parsed.end, today)) {
+      //   tanggalFix = getDefaultTanggal();
+      //   localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+      // } else {
+      //   tanggalFix = parsed;
+      // }
+      // 
+      tanggalFix = JSON.parse(savedTanggal);
+    } else {
+      tanggalFix = getDefaultTanggal();
+      localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
     }
-    getDataTransaksi(parsed.start, parsed.end);
+
+    setTanggal(tanggalFix);
+    getDataTransaksi(tanggalFix.start, tanggalFix.end);
+  }
+  
+  useEffect(() => {
+    reloadGetDataTransaksi();
   }, []);
 
   const formatDate = (dateString) => {
@@ -80,21 +100,17 @@ const Hutang = () => {
     setStModalList(!stModalList);
   };
 
-  const loadData = () => {
-    getDataTransaksi();
-  };
-
   const handleCari = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const start = formData.get("start");
     const end = formData.get("end");
     const dataTanggal = { start, end };
-    localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
     // simpan ke state
     setTanggal(dataTanggal);
-    getDataTransaksi(start, end);
-    // fetch data
+    // simpan ke localStorage
+    localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
+    reloadGetDataTransaksi();
   };
 
   const formatDateLocal = (date) => {
@@ -115,9 +131,10 @@ const Hutang = () => {
   };
 
   const handleReset = () => {
-    const resTgl = getDefaultTanggal();
-    setTanggal({ start: resTgl.start, end: resTgl.end });
-    getDataTransaksi(resTgl.start, resTgl.end);
+    let tanggalFix = getDefaultTanggal();
+    localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+    setTanggal({ start: tanggalFix.start, end: tanggalFix.end });
+    reloadGetDataTransaksi();
   };
 
   //
@@ -298,11 +315,11 @@ const Hutang = () => {
           isOpen={true}
           onClose={handleNota}
           cartId={cartId}
-          loadData={loadData}
+          loadData={reloadGetDataTransaksi}
         />
       )}
       {stModalList && (
-        <ModalListCart isOpen={true} onClose={handleListCart} cartId={cartId} />
+        <ModalListCartHutang isOpen={true} onClose={handleListCart} cartId={cartId} />
       )}
     </div>
   );

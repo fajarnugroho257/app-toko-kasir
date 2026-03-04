@@ -45,8 +45,6 @@ const DraftPenjualan = () => {
       );
       setDataTransaksi(response.data.data || []);
       swalSuccessAutoClose("Berhasil", "Data berhasil didapatkan", 500);
-      const dataTanggal = { start, end };
-      localStorage.setItem("filterTanggal", JSON.stringify(dataTanggal));
     } catch (error) {
       swalError(
         "Opps..!",
@@ -55,14 +53,31 @@ const DraftPenjualan = () => {
     }
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("filterTanggal");
-    let parsed = {};
-    if (saved) {
-      parsed = JSON.parse(saved);
-      setTanggal(parsed);
+  const reloadGetDataTransaksi = () => {
+    const savedTanggal = localStorage.getItem("filterTanggal");
+    // const today = new Date().toISOString().split("T")[0];
+    let tanggalFix;
+    if (savedTanggal) {
+      // const parsed = JSON.parse(savedTanggal);
+      // // Kalau end bukan hari ini → reset ke default
+      // if (!isSameDate(parsed.end, today)) {
+      //   tanggalFix = getDefaultTanggal();
+      //   localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+      // } else {
+      //   tanggalFix = parsed;
+      // }
+      // 
+      tanggalFix = JSON.parse(savedTanggal);
+    } else {
+      tanggalFix = getDefaultTanggal();
+      localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
     }
-    getDataTransaksi(parsed.start, parsed.end);
+    setTanggal(tanggalFix);
+    getDataTransaksi(tanggalFix.start, tanggalFix.end);
+  }
+
+  useEffect(() => {
+    reloadGetDataTransaksi();
   }, []);
 
   const formatDate = (dateString) => {
@@ -144,9 +159,10 @@ const DraftPenjualan = () => {
   };
 
   const handleReset = () => {
-    const resTgl = getDefaultTanggal();
-    setTanggal({ start: resTgl.start, end: resTgl.end });
-    getDataTransaksi(resTgl.start, resTgl.end);
+    let tanggalFix = getDefaultTanggal();
+    localStorage.setItem("filterTanggal", JSON.stringify(tanggalFix));
+    setTanggal({ start: tanggalFix.start, end: tanggalFix.end });
+    reloadGetDataTransaksi();
   };
 
   //

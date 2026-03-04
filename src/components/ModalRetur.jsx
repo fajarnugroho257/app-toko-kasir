@@ -258,7 +258,8 @@ function ModalRetur({ isOpen, cartId, stateTable, setStModalRetur }) {
                                 <input
                                   type="text"
                                   name="cart_qty"
-                                  value={val.qty_retur ?? 0}
+                                  placeholder="0"
+                                  value={val.qty_retur}
                                   onChange={(event) => {
                                     const value = event.target.value;
                                     // Hanya angka dan satu titik

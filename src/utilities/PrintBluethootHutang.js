@@ -1,12 +1,12 @@
 import { connectSavedPrinter } from "./printerCharacteristic.js";
+import dayjs from "dayjs";
+import "dayjs/locale/id";
 
-const PrintBluethoot = async (
+const PrintBluethootHutang = async (
   cart_data,
   pusat,
   cabang,
-  tagihan,
-  valInputBayar,
-  kembalian
+  cartDraft
 ) => {
   //
   function padCenter(text, width, padChar = " ") {
@@ -26,6 +26,11 @@ const PrintBluethoot = async (
       .replace(/\s+/g, "");
   }
 
+  const formaOnlytDate = (dateString) => {
+      const date = dayjs(dateString).locale("id");
+      return date.format("DD MMM YYYY");
+    };
+
   try {
     // ESC/POS Commands
     // const ESC = "\x1B";
@@ -40,11 +45,33 @@ const PrintBluethoot = async (
     let content = padCenter(pusat_nama, 30, " ") + "\n";
     content += padCenter(cabang_nama, 30, " ") + "\n";
     content += padCenter(`${now.toLocaleString()}`, 30, " ") + "\n";
+    // 
+    content +=  "\n";
+    content += padCenter("NOTA HUTANG", 30, " ") + "\n";
+    content += padCenter("Pelanggan", 30, " ") + "\n";
+
+    content += "=============================" + "\n";
+    let pelanggan = cartDraft.draft_pelanggan.padStart(16, " ");
+    content += `| Pelanggan  ${pelanggan}|\n`;
+    let ttlBelanja = formatRupiah(cartDraft.draft_uang_tagihan).padStart(14, " ");
+    content += `| Ttl Belanja  ${ttlBelanja}|\n`;
+    let muka = formatRupiah(cartDraft.draft_uang_muka).padStart(16, " ");
+    content += `| Uang Muka  ${muka}|\n`;
+    let sisa = formatRupiah(cartDraft.draft_uang_sisa).padStart(15, " ");
+    content += "=============================" + "\n";
+    content += `| Kekurangan  ${sisa}|\n`;
+    // 
+    content +=  "\n";
+    content += padCenter("Pembelian", 30, " ") + "\n";
+    // 
     content += "=============================" + "\n";
     content += "| Item     |Qty| Price       |" + "\n";
     content += "=============================" + "\n";
 
+    let ttlsSubTotal = 0;
+    // 
     printDatas.forEach((item) => {
+      ttlsSubTotal += parseInt(item.cart_subtotal);
       let nama = item.cart_nama;
       let cart_diskon = item.cart_diskon === "yes" ? " (Gros)" : "";
       let qty = String(item.cart_qty).padStart(1, " ");
@@ -52,20 +79,10 @@ const PrintBluethoot = async (
       let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(11, " ");
       content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal} |\n`;
     });
-
     content += "=============================" + "\n";
     content +=
       "| Total".padEnd(13, " ") +
-      `${formatRupiah(tagihan)}`.padStart(15, " ") +
-      " |\n";
-    content += "-----------------------------" + "\n";
-    content +=
-      "| Bayar".padEnd(13, " ") +
-      `${formatRupiah(valInputBayar)}`.padStart(15, " ") +
-      " |\n";
-    content +=
-      "| Kembalian".padEnd(13, " ") +
-      `${formatRupiah(kembalian)}`.padStart(15, " ") +
+      `${formatRupiah(ttlsSubTotal)}`.padStart(15, " ") +
       " |\n";
     content += "=============================" + "\n";
     content += padCenter("Terimakasih", 30, " ") + "\n\n";
@@ -119,4 +136,4 @@ const PrintBluethoot = async (
   }
 };
 
-export default PrintBluethoot;
+export default PrintBluethootHutang;

@@ -4,7 +4,7 @@ import api from "../utilities/axiosInterceptor";
 import { QZTrayProvider, useQZTray } from "./QZTrayContext";
 import PrintBluethoot from "../utilities/PrintBluethoot";
 import RupiahFormat from "../utilities/RupiahFormat";
-import PilihPrintDraft from "../utilities/PilihPrintDraft";
+import PilihPrintHutang from "../utilities/PilihPrintHutang";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import { Link } from "react-router-dom";
@@ -16,7 +16,7 @@ import {
 } from "../utilities/Swal";
 
 
-function ModalListCart({ isOpen, onClose, cartId }) {
+function ModalListCartHutang({ isOpen, onClose, cartId }) {
   //
   const [notaData, setNotaData] = useState([]);
   const [cartDraft, setCartDraft] = useState([]);
@@ -56,7 +56,7 @@ function ModalListCart({ isOpen, onClose, cartId }) {
   };
 
   const handlePrintDraft = () => {
-    PilihPrintDraft(
+    PilihPrintHutang(
       notaData,
       cartDraft
     )
@@ -80,7 +80,7 @@ function ModalListCart({ isOpen, onClose, cartId }) {
             {/* Header: Tetap di atas */}
             <div className="flex-none">
               <h2 className="text-base md:text-lg font-bold mb-2 text-black">
-                Detail Draft Pembelian
+                Detail Hutang
               </h2>
               <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
             </div>
@@ -94,16 +94,6 @@ function ModalListCart({ isOpen, onClose, cartId }) {
                     <td className="w-[30%] px-3 py-1 border border-gray-200">Nama Pelanggan</td>
                     <td className="w-[5%] px-3 py-1 border border-gray-200">:</td>
                     <td className="w-[65%] px-3 py-1 border border-gray-200 text-right">{cartDraft.draft_pelanggan}</td>
-                  </tr>
-                  <tr>
-                    <td className="w-[30%] px-3 py-1 border border-gray-200">Pembuatan</td>
-                    <td className="w-[5%] px-3 py-1 border border-gray-200">:</td>
-                    <td className="w-[65%] px-3 py-1 border border-gray-200 text-right">{formaOnlytDate(cartDraft.draft_start)}</td>
-                  </tr>
-                  <tr>
-                    <td className="w-[30%] px-3 py-1 border border-gray-200">Kirim</td>
-                    <td className="w-[5%] px-3 py-1 border border-gray-200">:</td>
-                    <td className="w-[65%] px-3 py-1 border border-gray-200 text-right">{formaOnlytDate(cartDraft.draft_end)}</td>
                   </tr>
                   <tr>
                     <td className="w-[30%] px-3 py-1 border border-gray-200">Ttl Belanja</td>
@@ -191,4 +181,4 @@ function ModalListCart({ isOpen, onClose, cartId }) {
   );
 }
 
-export default ModalListCart;
+export default ModalListCartHutang;
