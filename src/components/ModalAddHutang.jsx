@@ -82,6 +82,9 @@ function ModalAddHutang({
     if (result.isConfirmed) {
       const toastId = toast.loading("Sending data...");
       try {
+        console.log(form.cart_id);
+        
+        // const response = {};
         const response = await api.post("/create-hutang-pembelian", form, {
           headers: {
             Authorization: `Bearer ${token}`, // Sisipkan token di header
@@ -89,7 +92,7 @@ function ModalAddHutang({
             Accept: "application/json",
           },
         });
-        //
+        //  
         if (response.data.success) {
           // delete cart
           close();
@@ -101,10 +104,10 @@ function ModalAddHutang({
             isLoading: false,
             autoClose: 2000,
           });
-          // PilihPrintHutang(
-          //   notaData,
-          //   cartDraft
-          // )
+          PilihPrintHutang(
+            response.data.cartData,
+            response.data.cartDraft
+          )
         } else {
           toast.update(toastId, {
             render: `${response.data.message}`,

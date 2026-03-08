@@ -74,7 +74,7 @@ const Laporan = () => {
 
   return (
     <div className="">
-      <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+      <div className="h-full overflow-auto px-4 py-12 md:py-14 md:px-10">
         <div className="flex justify-end">
           <Link
             to={"/dashboard"}

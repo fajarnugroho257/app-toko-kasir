@@ -124,9 +124,10 @@ const Hutang = () => {
   const getDefaultTanggal = () => {
     const today = new Date();
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     return {
       start: formatDateLocal(firstDay),
-      end: formatDateLocal(today),
+      end: formatDateLocal(lastDay),
     };
   };
 
@@ -144,7 +145,7 @@ const Hutang = () => {
 
   return (
     <div className="">
-      <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+      <div className="h-full overflow-auto px-4 py-12 md:py-14 md:px-10">
         <div className="flex justify-end">
           <div className="flex justify-end">
             <Link

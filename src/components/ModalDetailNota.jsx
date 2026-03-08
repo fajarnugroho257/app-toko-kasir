@@ -48,25 +48,35 @@ function ModalDetailNota({ isOpen, onClose, cartId }) {
       notaData,
       trans.trans_total,
       trans.trans_bayar,
-      trans.trans_kembalian
+      trans.trans_kembalian,
+      trans.trans_pelanggan
     );
   };
   //
   if (!isOpen) return null;
   return (
     <>
-      {notaData.length >= 1 && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-          <div className="bg-white w-[90%] md:w-1/2 h-auto p-6 rounded-lg shadow-lg relative z-10">
-            <h2 className="text-lg md:text-xl font-bold mb-4 text-black font-poppins">
-              Nota
-            </h2>
-            <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
-            <div className="">
-              <div className="w-full overflow-auto">
-                <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
-                  <thead>
+    {notaData.length >= 1 && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 font-poppins p-4">
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gray-900 opacity-50" onClick={onClose}></div>
+          
+          {/* Modal Card */}
+          <div className="bg-white w-[95%] md:w-[60%] h-[90%] p-6 rounded-lg shadow-lg relative z-10 flex flex-col">
+            
+            {/* Header: Tetap di atas */}
+            <div className="flex-none">
+              <h2 className="text-base md:text-lg font-bold mb-2 text-black">
+                Detail Nota Pembelian
+              </h2>
+              <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
+            </div>
+
+            {/* Content: Bagian yang bisa di-scroll */}
+            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="overflow-x-auto">
+                <table className="min-w-full border-collapse border border-gray-200 shadow-sm rounded-lg text-xs md:text-sm">
+                  <thead className="sticky top-0 bg-gray-100">
                     <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
                       <th className="px-1 py-3 border border-gray-200">No</th>
                       <th className="px-1 py-3 border border-gray-200">
@@ -146,9 +156,11 @@ function ModalDetailNota({ isOpen, onClose, cartId }) {
                 </table>
               </div>
             </div>
-            <div className="flex justify-between mt-5">
+
+            {/* Footer: Tetap di bawah */}
+            <div className="flex-none flex justify-between mt-5 pt-4 border-t">
               <button
-                className="px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
+                className="px-4 py-2 bg-gray-200 border border-gray-300 font-bold text-black rounded hover:bg-gray-300 transition-colors"
                 onClick={onClose}
               >
                 Close

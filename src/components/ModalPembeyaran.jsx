@@ -149,7 +149,7 @@ function ModalPembayaran({
 
       printDatas.forEach((item) => {
         let nama = item.barang_nama;
-        let cart_diskon = item.barang_st_diskon === "yes" ? " (Grosir)" : "";
+        let cart_diskon = item.barang_st_diskon === "yes" ? " (Gros)" : "";
         let qty = String(item.cart_qty).padStart(1, " ");
         let harga = `${formatRupiah(item.barang_harga_jual)}`.padEnd(8, " ");
         let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(11, " ");
@@ -273,6 +273,7 @@ function ModalPembayaran({
               tagihan,
               valInputBayar,
               kembalian,
+              valInputPelanggan,
             );
           }
           // close modal bayar

@@ -6,7 +6,8 @@ const PrintBluethoot = async (
   cabang,
   tagihan,
   valInputBayar,
-  kembalian
+  kembalian,
+  trans_pelanggan
 ) => {
   //
   function padCenter(text, width, padChar = " ") {
@@ -44,13 +45,17 @@ const PrintBluethoot = async (
     content += "| Item     |Qty| Price       |" + "\n";
     content += "=============================" + "\n";
 
+    let pelanggan = (trans_pelanggan ?? "").toString().padStart(16, " ");
+    content += `| Pelanggan  ${pelanggan}|\n`;
+    content += "=============================" + "\n";
+
     printDatas.forEach((item) => {
       let nama = item.cart_nama;
       let cart_diskon = item.cart_diskon === "yes" ? " (Gros)" : "";
-      let qty = String(item.cart_qty).padStart(1, " ");
+      let qty = String(item.cart_qty).padStart(3, " "); // lebar tetap
       let harga = `${formatRupiah(item.cart_harga_jual)}`.padEnd(8, " ");
-      let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(11, " ");
-      content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal} |\n`;
+      let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(10, " ");
+      content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal}|\n`;
     });
 
     content += "=============================" + "\n";
@@ -70,7 +75,8 @@ const PrintBluethoot = async (
     content += "=============================" + "\n";
     content += padCenter("Terimakasih", 30, " ") + "\n\n";
     console.log(content);
-    const printData = new TextEncoder().encode(content);
+    // const printData = new TextEncoder().encode(content);
+    const printData = new TextEncoder().encode(content + "\n\n");
 
     // Hubungkan ke perangkat Bluetooth
     // const device = await navigator.bluetooth.requestDevice({
@@ -102,18 +108,19 @@ const PrintBluethoot = async (
     }
 
     async function sendDataInChunks(characteristic, data) {
-      const chunkSize = 256; // Kurangi ukuran chunk
+      const chunkSize = 64; // Kurangi ukuran chunk
       const chunks = chunkArrayBuffer(data, chunkSize);
 
       for (const chunk of chunks) {
-        await characteristic.writeValue(chunk);
-        await new Promise((resolve) => setTimeout(resolve, 200)); // Tambah jeda waktu
+        // await characteristic.writeValue(chunk);
+        await characteristic.writeValueWithoutResponse(chunk);
+        await new Promise((resolve) => setTimeout(resolve, 80)); // Tambah jeda waktu
       }
     }
     // end membagi dua
     await sendDataInChunks(characteristic, printData);
 
-    console.log("Nota berhasil dicetak.");
+    console.log("Nota berhasil dicetak yaa.");
   } catch (error) {
     console.error("Gagal mencetak nota:", error);
   }

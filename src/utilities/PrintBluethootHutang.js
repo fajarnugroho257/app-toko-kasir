@@ -51,7 +51,7 @@ const PrintBluethootHutang = async (
     content += padCenter("Pelanggan", 30, " ") + "\n";
 
     content += "=============================" + "\n";
-    let pelanggan = cartDraft.draft_pelanggan.padStart(16, " ");
+    let pelanggan = (cartDraft?.draft_pelanggan ?? "").toString().padStart(16, " ");
     content += `| Pelanggan  ${pelanggan}|\n`;
     let ttlBelanja = formatRupiah(cartDraft.draft_uang_tagihan).padStart(14, " ");
     content += `| Ttl Belanja  ${ttlBelanja}|\n`;
@@ -74,10 +74,10 @@ const PrintBluethootHutang = async (
       ttlsSubTotal += parseInt(item.cart_subtotal);
       let nama = item.cart_nama;
       let cart_diskon = item.cart_diskon === "yes" ? " (Gros)" : "";
-      let qty = String(item.cart_qty).padStart(1, " ");
+      let qty = String(item.cart_qty).padStart(3, " ");
       let harga = `${formatRupiah(item.cart_harga_jual)}`.padEnd(8, " ");
-      let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(11, " ");
-      content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal} |\n`;
+      let subTotal = `${formatRupiah(item.cart_subtotal)}`.padStart(10, " ");
+      content += `| ${nama}${cart_diskon}\n| ${harga} | ${qty} | ${subTotal}|\n`;
     });
     content += "=============================" + "\n";
     content +=
@@ -87,7 +87,8 @@ const PrintBluethootHutang = async (
     content += "=============================" + "\n";
     content += padCenter("Terimakasih", 30, " ") + "\n\n";
     console.log(content);
-    const printData = new TextEncoder().encode(content);
+    // const printData = new TextEncoder().encode(content);
+    const printData = new TextEncoder().encode(content + "\n\n");
 
     // Hubungkan ke perangkat Bluetooth
     // const device = await navigator.bluetooth.requestDevice({
@@ -119,18 +120,19 @@ const PrintBluethootHutang = async (
     }
 
     async function sendDataInChunks(characteristic, data) {
-      const chunkSize = 256; // Kurangi ukuran chunk
+      const chunkSize = 64; // Kurangi ukuran chunk
       const chunks = chunkArrayBuffer(data, chunkSize);
 
       for (const chunk of chunks) {
-        await characteristic.writeValue(chunk);
-        await new Promise((resolve) => setTimeout(resolve, 200)); // Tambah jeda waktu
+        // await characteristic.writeValue(chunk);
+        await characteristic.writeValueWithoutResponse(chunk);
+        await new Promise((resolve) => setTimeout(resolve, 80)); // Tambah jeda waktu
       }
     }
     // end membagi dua
     await sendDataInChunks(characteristic, printData);
 
-    console.log("Nota berhasil dicetak.");
+    console.log("Nota berhasil dicetak yaa.");
   } catch (error) {
     console.error("Gagal mencetak nota:", error);
   }

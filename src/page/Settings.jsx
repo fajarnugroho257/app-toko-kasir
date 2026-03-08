@@ -34,9 +34,9 @@ const Setting = () => {
 
   return (
     <div className="">
-      <div className="h-full overflow-auto px-4 pt-12 md:py-14 md:px-10">
+      <div className="h-full overflow-auto px-4 py-12 md:py-14 md:px-10">
         <div className="flex justify-end">
-          <div className="flex justify-end">
+          <div className="flex justify-end mb-3">
             <Link
               to={"/dashboard"}
               className="font-poppins rounded-sm bg-colorPrimary text-white px-2 py-1 text-xs md:text-sm"

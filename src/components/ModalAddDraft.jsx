@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import api from "../utilities/axiosInterceptor";
 import Booking from "./Booking";
 import { swalConfirm } from "../utilities/Swal";
+import PilihPrintDraft from "../utilities/PilihPrintDraft";
 
 function ModalAddDraf({
   close,
@@ -105,6 +106,11 @@ function ModalAddDraf({
             isLoading: false,
             autoClose: 2000,
           });
+          // cetak
+          PilihPrintDraft(
+            response.data.cartData,
+            response.data.cartDraft,
+          )
         } else {
           toast.update(toastId, {
             render: `${response.data.message}`,
