@@ -165,12 +165,12 @@ function ModalAddDraf({
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-      <div className="bg-white w-[90%] md:w-1/2 h-auto p-6 rounded-lg shadow-lg relative z-10">
-        <h2 className="text-lg md:text-xl font-bold mb-4 text-black font-poppins">
+      <div className="bg-white w-[90%] md:w-1/2 h-auto p-4 md:p-6 rounded-lg shadow-lg relative z-10">
+        <h2 className="text-lg md:text-xl font-bold mb-2 md:mb-4 text-black font-poppins">
           Draft Penjualan
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
+          <div className="h-[2px] w-full bg-colorPrimary mb-2 md:mb-4"></div>
           <div className="grid grid-rows mb-2">
             <small>
               Total pembayaran :{" "}
@@ -290,7 +290,7 @@ function ModalAddDraf({
             </button>
             <button
               type="submit"
-              className="px-2 md:px-4 py-1 md:py-2 bg-blue-600 font-poppins text-colorGray rounded hover:bg-blue-500"
+              className="px-2 md:px-4 py-1 md:py-2 text-sm md:text-base bg-blue-600 font-poppins text-colorGray rounded hover:bg-blue-500"
             >
               <i className="fa fa-save"></i> Simpan Draft
             </button>

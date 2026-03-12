@@ -94,7 +94,7 @@ function Pembayaran() {
             Selamat Datang {name} <br /> {cabang_nama} <br />
           </h3>
           <div className="flex items-center justify-center">
-            <div className="md:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-4 items-center justify-center">
+            <div className="md:w-[75%] xl:w-3/5 grid grid-cols-2 gap-10 md:gap-1 md:grid-cols-4 items-center justify-center">
               <div onClick={() => handleSubmit("pos")}>
                 <div className="mx-auto w-24 h-[110px] md:w-28 md:h-40 lg:w-44 lg:h-56 bg-colorPrimary rounded-lg shadow-lg flex justify-center items-center cursor-pointer hover:bg-colorPrimaryHover">
                   <img src={iconPos} className="w-4/6" alt="iconPos" />

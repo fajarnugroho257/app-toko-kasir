@@ -19,6 +19,7 @@ function ModalPembayaran({
   const token = localStorage.getItem("token");
   const pusat = localStorage.getItem("toko_pusat");
   const cabang = localStorage.getItem("cabang_nama");
+  const stPrinter = localStorage.getItem("printSelected");
   //
   const [number, setNumber] = useState([]);
   const [tagihan, setTagihan] = useState(0);
@@ -53,7 +54,7 @@ function ModalPembayaran({
         setValInputPelanggan(cartDataDraft.draft_pelanggan ?? "");
         const draft_uang_muka = Number(cartDataDraft.draft_uang_muka ?? 0);
         setKembalian(draft_uang_muka - parseInt(draftTagihan ?? ttlBayar));
-        setValInputBayar(draft_uang_muka);
+        setValInputBayar(draft_uang_muka.toString());
         // tanggal
         setSdraftStart(cartDataDraft.draft_start ?? null);
         setdraftEnd(cartDataDraft.draft_end ?? null);
@@ -103,18 +104,22 @@ function ModalPembayaran({
   };
 
   // console.log(formatRupiah(result));
-  const hitung = () => {
-    console.log(result);
-  };
   const [valInputBayar, setValInputBayar] = useState("");
-  const handleInputBayar = (event) => {
-    // const val = event.target.value;
-    let input = event.target.value.replace(/\./g, "");
-    if (/^\d*$/.test(input)) {
-      let res = Number(input);
-      setKembalian(res - parseInt(tagihan));
-      setValInputBayar(res);
-    }
+  // lama
+  // const handleInputBayar = (event) => {
+  //   // const val = event.target.value;
+  //   let input = event.target.value.replace(/\./g, "");
+  //   if (/^\d*$/.test(input)) {
+  //     let res = Number(input);
+  //     setKembalian(res - parseInt(tagihan));
+  //     setValInputBayar(res);
+  //   }
+  // };
+  // baru 
+  const handleInputBayar = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+    setKembalian(parseInt(value) - parseInt(tagihan));
+    setValInputBayar(value);
   };
 
   const { isConnected, printer, findPrinter } = useQZTray();
@@ -219,13 +224,15 @@ function ModalPembayaran({
   };
   const handleStoreBayar = async () => {
     // alert(cart_id);
-    if (valInputBayar <= 0) {
+    const selisih = parseInt(valInputBayar) - tagihan;
+    if (parseInt(valInputBayar) <= 0) {
       swalError(
         "Opps.!",
         "Nilai pembayaran wajib diisi, Atau pilih hutang / draft ",
       );
       return;
     }
+    console.log(kembalian);
     if (kembalian < 0) {
       swalError(
         "Opps.!",
@@ -315,33 +322,53 @@ function ModalPembayaran({
   const handleHutang = () => {
     setStModalHutang(!stModalHutang);
   };
+
+  const handleClickNumber = (num) => {
+    const newValue = (valInputBayar + num).replace(/\D/g, "");
+    setValInputBayar(newValue);
+    setKembalian(parseInt(newValue || 0) - parseInt(tagihan || 0));
+  };
+
+  const handleDelete = () => {
+    const newValue = valInputBayar.slice(0, -1);
+    setValInputBayar(newValue);
+    setKembalian(parseInt(newValue || 0) - parseInt(tagihan || 0));
+  };
+
+  const handleClear = () => {
+    setKembalian(0 - parseInt(tagihan || 0));
+    setValInputBayar("");
+  };
+
   // perhitungan
 
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="absolute inset-0 bg-gray-900 opacity-50"></div>
-      <div className="bg-white w-[90%] md:w-1/2 h-auto p-6 rounded-lg shadow-lg relative z-10">
-        <h2 className="text-lg md:text-xl font-bold mb-4 text-black font-poppins">
+      <div className="bg-white w-[90%] md:w-1/2 h-auto p-4 md:p-6 rounded-lg shadow-lg relative z-10">
+        <h2 className="text-sm md:text-lg xl:text-xl font-bold mb-2 md:mb-3 text-black font-poppins">
           Pembayaran
         </h2>
-        <p>QZ Tray: {isConnected ? "Connected" : "Disconnected"}</p>
-        <p>Printer: {printer || "Not Found"}</p>
-        <div className="h-[2px] w-full bg-colorPrimary mb-4"></div>
+        <div className={`${stPrinter === 'kabel' ? "" : "hidden"}`}>
+          <p>QZ Tray: {isConnected ? "Connected" : "Disconnected"}</p>
+          <p>Printer: {printer || "Not Found"}</p>
+        </div>
+        <div className="h-[2px] w-full bg-colorPrimary mb-1 md:mb-3"></div>
         <div className="">
           <div className="w-full">
-            <div className="font-poppins text-lg md:text-xl flex justify-between font-semibold my-2">
-              <h3 className="text-black">PEMBAYARAN</h3>
+            <div className="font-poppins text-sm md:text-lg xl:text-xl flex justify-between font-semibold my-1 md:my-2">
+              <h3 className="text-xs md:text-base xl:text-lg text-black">PEMBAYARAN</h3>
               {/* <h3 className="text-black">{formatRupiah(result)}</h3> */}
-              <h3 className="text-black">{formatRupiah(valInputBayar)}</h3>
+              <h3 className="text-xs md:text-base xl:text-lg text-black">{formatRupiah(valInputBayar)}</h3>
             </div>
-            <div className="font-poppins text-lg md:text-xl flex justify-between font-semibold">
-              <h3 className="text-black">TAGIHAN</h3>
-              <h3 className="text-colorRed">{formatRupiah(tagihan)}</h3>
+            <div className="font-poppins text-sm md:text-lg xl:text-xl flex justify-between font-semibold">
+              <h3 className="text-xs md:text-base xl:text-lg text-black">TAGIHAN</h3>
+              <h3 className="text-xs md:text-base xl:text-lg text-colorRed">{formatRupiah(tagihan)}</h3>
             </div>
-            <div className="h-[2px] w-full bg-colorPrimary my-2"></div>
-            <div className="font-poppins text-lg md:text-xl flex justify-between font-semibold">
-              <h3 className="text-black">KEMBALIAN</h3>
+            <div className="h-[2px] w-full bg-colorPrimary my-1 md:my-2"></div>
+            <div className="font-poppins text-sm md:text-lg xl:text-xl flex justify-between font-semibold">
+              <h3 className="text-xs md:text-base xl:text-lg text-black">KEMBALIAN</h3>
               <h3
                 className={`text-black px-2 ${
                   kembalian >= 0 ? "bg-green-500" : "bg-red-500"
@@ -350,26 +377,66 @@ function ModalPembayaran({
                 {formatRupiah(kembalian)}
               </h3>
             </div>
-            <div className="text-right">
-              <input
-                pattern="\d*"
-                inputMode="numeric"
-                onChange={(event) => handleInputBayar(event)}
-                value={formatNumber(valInputBayar)}
-                placeholder="Bayar"
-                autoFocus
-                className="w-full mt-5 text-right border border-colorPrimary py-4 px-2 font-poppins font-semibold"
-              ></input>
-              <small className="text-xs text-red-500">
-                *<i>Wajib diisi</i>
-              </small>
+            <div className="grid grid-cols-2 gap-2 md:gap-4 mt-2 md:mt-4">
+              <div>
+                {/* tombol 1 sampai 9 seperti kalkulator untuk mengisi nominal pembayaran */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[1,2,3,4,5,6,7,8,9].map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => handleClickNumber(n)}
+                      className="bg-gray-200 py-2 text-sm md:text-base xl:text-lg font-semibold rounded hover:bg-gray-300"
+                    >
+                      {n}
+                    </button>
+                  ))}
+                  <button
+                    onClick={handleClear}
+                    className="bg-red-400 text-sm md:text-base xl:text-lg text-white py-2 rounded hover:bg-red-500"
+                  >
+                    C
+                  </button>
+                  <button
+                    onClick={() => handleClickNumber(0)}
+                    className="bg-gray-200 py-2 text-sm md:text-base xl:text-lg font-semibold rounded hover:bg-gray-300"
+                  >
+                    0
+                  </button>
+                  <button
+                    onClick={() => handleClickNumber("000")}
+                    className="bg-blue-400 text-sm md:text-base xl:text-lg text-white py-2 rounded hover:bg-blue-500"
+                  >
+                    000
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="bg-yellow-400 text-sm md:text-base xl:text-lg py-2 rounded hover:bg-yellow-500"
+                  >
+                    ⌫
+                  </button>
+                </div>
+              </div>
+              <div className="text-right">
+                <input
+                  pattern="\d*"
+                  inputMode="numeric"
+                  onChange={(event) => handleInputBayar(event)}
+                  value={formatNumber(valInputBayar)}
+                  placeholder="Bayar"
+                  // autoFocus
+                  className="text-sm md:text-base w-full text-right border border-colorPrimary py-2 md:py-3 px-2 font-poppins font-semibold"
+                ></input>
+                <small className="text-xs text-red-500">
+                  *<i>Wajib diisi</i>
+                </small>
+              </div>
             </div>
             <div className="mt-2 text-right">
               <input
                 onChange={(event) => handleInputPelanggan(event)}
                 value={valInputPelanggan}
                 placeholder="Nama pelanggan"
-                className="w-full mt-1 text-right border border-colorPrimary py-2 px-2 font-poppins font-semibold"
+                className="text-sm md:text-base w-full mt-1 text-right border border-colorPrimary py-2 px-2 font-poppins font-semibold"
               ></input>
               <small className="text-xs text-colorPrimary ">
                 *<i>Boleh dikosongi</i>
@@ -377,38 +444,37 @@ function ModalPembayaran({
             </div>
           </div>
         </div>
-
         {/* <input type="text" name="customer" className={`border-2 border-colorBlue block mb-4 py-1 w-full px-2`} placeholder="" /> */}
-        <div className="md:flex md:justify-between mt-5">
-          <button
-            className="text-sm md:text-base px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded hover:bg-slate-200"
-            onClick={onClose}
-          >
-            Close
-          </button>
-          <div className="flex text-sm md:text-base justify-between">
+        <div className="md:flex md:justify-between mt-2 md:mt-4">
+          <div className="flex text-sm md:text-base justify-end md:justify-center order-2">
             <button
               onClick={() => handleHutang()}
               type="submit"
-              className="mr-1 px-2 md:px-4 py-1 md:py-2 bg-red-600 font-poppins text-colorGray rounded hover:bg-red-500"
+              className="text-sm mr-1 px-2 md:px-4 py-1 bg-red-600 font-poppins text-colorGray rounded-sm md:rounded-md hover:bg-red-500"
             >
               Hutang
             </button>
             <button
               onClick={() => handleDraftPensanan()}
               type="submit"
-              className="mr-1 px-2 md:px-4 py-1 md:py-2 bg-blue-600 font-poppins text-colorGray rounded hover:bg-blue-500"
+              className="text-sm mr-1 px-2 md:px-4 py-1 bg-blue-600 font-poppins text-colorGray rounded-sm md:rounded-md hover:bg-blue-500"
             >
               Buat Draft
             </button>
             <button
               onClick={() => handleStoreBayar()}
               type="submit"
-              className="px-2 md:px-4 py-1 md:py-2 bg-colorPrimary font-poppins text-colorGray rounded hover:bg-blue-900"
+              className="text-sm px-2 md:px-4 py-1 bg-colorPrimary font-poppins text-colorGray rounded-sm md:rounded-md hover:bg-blue-900"
             >
               Bayar & Cetak
             </button>
           </div>
+          <button
+            className="order-1 mt-3 text-sm md:text-base px-2 md:px-4 py-1 md:py-2 bg-colorGray border-2 border-colorBlue font-poppins text-black rounded-sm md:rounded-md hover:bg-slate-200"
+            onClick={onClose}
+          >
+            Close
+          </button>
         </div>
       </div>
       {stModalDraft && (

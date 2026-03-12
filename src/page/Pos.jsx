@@ -160,28 +160,99 @@ function Pos() {
     return total + parseInt(item.cart_subtotal);
   }, 0);
 
+  const tambahQty = (index) => {
+    const values = [...cart];
+    const qty = parseInt(values[index]['cart_qty']);
+    const resQty = (qty + 1).toString();
+    values[index]['cart_qty'] = resQty;
+    let result_harga =
+        parseInt(resQty) >=
+        parseInt(values[index]["barang_grosir_pembelian"])
+          ? values[index]["barang_grosir_harga_jual"]
+          : values[index]["awal_barang_harga_jual"];
+      values[index]["barang_harga_jual"] = result_harga;
+    let subTotal = result_harga * resQty;
+    values[index]["cart_subtotal"] = subTotal;
+    // status diskon
+    let stDiskon = false;
+    if (
+      parseInt(resQty) >=
+      parseInt(values[index]["barang_grosir_pembelian"])
+    ) {
+      stDiskon = "yes";
+    } else {
+      stDiskon = "no";
+    }
+    values[index]["barang_st_diskon"] = stDiskon;
+    SetCart(values);
+  };
+
+  const kurangQty = (index) => {
+    const values = [...cart];
+    const qty = parseInt(values[index]['cart_qty']);
+    const resQty = (qty - 1).toString();
+    if(resQty < 1){
+      return;
+    }
+    values[index]['cart_qty'] = resQty;
+    let result_harga =
+        parseInt(resQty) >=
+        parseInt(values[index]["barang_grosir_pembelian"])
+          ? values[index]["barang_grosir_harga_jual"]
+          : values[index]["awal_barang_harga_jual"];
+      values[index]["barang_harga_jual"] = result_harga;
+    let subTotal = result_harga * resQty;
+    values[index]["cart_subtotal"] = subTotal;
+    // status diskon
+    let stDiskon = false;
+    if (
+      parseInt(resQty) >=
+      parseInt(values[index]["barang_grosir_pembelian"])
+    ) {
+      stDiskon = "yes";
+    } else {
+      stDiskon = "no";
+    }
+    values[index]["barang_st_diskon"] = stDiskon;
+    SetCart(values);
+  };
+
   const rowTable = (item, index, resNo) => {
     // console.log(item);
     return (
       <tr className="text-center text-xs md:text-lg" key={index}>
         <td>{resNo}</td>
-        <td>{item.barang_barcode}</td>
+        <td className="hidden md:table-cell">{item.barang_barcode}</td>
         <td>{item.barang_nama}</td>
         <td>
-          <input
-            value={item.cart_qty}
-            type="text"
-            name="cart_qty"
-            onChange={(event) => {
-              const value = event.target.value;
-              // Hanya angka dan satu titik
-              if (/^\d*\.?\d*$/.test(value)) {
-                handleInputChange(index, event);
-              }
-            }}
-            className="input-qty"
-            required
-          ></input>
+          <div className="flex gap-1">
+            <button
+              type="button" 
+              onClick={() => kurangQty(index)}
+              className="bg-red-500 px-2 md:px-3 rounded-sm">
+              <i className="fa fa-minus text-white"></i>
+            </button>
+            <input
+              value={item.cart_qty}
+              type="text"
+              name="cart_qty"
+              onChange={(event) => {
+                const value = event.target.value;
+                // Hanya angka dan satu titik
+                if (/^\d*\.?\d*$/.test(value)) {
+                  handleInputChange(index, event);
+                }
+              }}
+              className="input-qty"
+              required
+            ></input>
+            <button
+              type="button"
+              onClick={() => tambahQty(index)}
+              className="bg-green-500 px-2 md:px-3 rounded-sm">
+              <i className="fa fa-plus text-white"></i>
+            </button>
+          </div>
         </td>
         <td className="text-right px-2">
           <p
@@ -204,7 +275,7 @@ function Pos() {
         <td>
           <i
             onClick={() => handleRemoveField(index)}
-            className="cursor-pointer fa fa-trash text-red-500 text-ml md:text-xl"
+            className="cursor-pointer fa fa-trash text-red-500 text-lg md:text-xl"
           ></i>
         </td>
       </tr>
@@ -344,16 +415,16 @@ function Pos() {
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
           <div className="flex-1 overflow-auto mt-2 bg-white rounded">
-            <table className="min-w-[900px] w-full text-xs md:text-sm">
+            <table className="min-w-[500px] w-full text-xs md:text-sm">
               <thead>
                 <tr>
                   <th className="w-[5%]">No</th>
-                  <th className="w-[20%]">Barcode</th>
-                  <th className="w-[20%]">Nama</th>
+                  <th className="w-[10%] md:w-[20%] hidden md:table-cell">Barcode</th>
+                  <th className="w-[25%]">Nama</th>
                   <th className="w-[25%] md:w-[15%]">Qty</th>
-                  <th className="w-[17%]">Harga</th>
-                  <th className="w-[17%]">SubTotal</th>
-                  <th className="w-[6%]">Hapus</th>
+                  <th className="w-[15%]">Harga</th>
+                  <th className="w-[15%]">SubTotal</th>
+                  <th className="w-[5%]">Hapus</th>
                 </tr>
               </thead>
               <tbody>

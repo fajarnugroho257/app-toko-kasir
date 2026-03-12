@@ -105,7 +105,7 @@ function ModalListCartHutang({ isOpen, onClose, cartId }) {
                     <td className="w-[5%] px-3 py-1 border border-gray-200">:</td>
                     <td className="w-[65%] px-3 py-1 border border-gray-200 text-right">{RupiahFormat(cartDraft.draft_uang_muka)}</td>
                   </tr>
-                  <tr>
+                  <tr className="bg-red-200">
                     <td className="w-[30%] px-3 py-1 border border-gray-200">Kekurangan</td>
                     <td className="w-[5%] px-3 py-1 border border-gray-200">:</td>
                     <td className="w-[65%] px-3 py-1 border border-gray-200 text-right">{RupiahFormat(cartDraft.draft_uang_sisa)}</td>

@@ -155,7 +155,7 @@ const Penjualan = () => {
 
   return (
     <div className="">
-      <div className="h-full overflow-auto px-4 py-12 md:py-14 md:px-10">
+      <div className="h-full overflow-auto px-4 py-12 md:py-14 md:px-5">
         <div className="flex justify-end">
           <Link
             to={"/dashboard"}
@@ -188,7 +188,7 @@ const Penjualan = () => {
           </Link>
         </div>
         <form onSubmit={handleCari}>
-          <div className="my-3 flex gap-2 justify-end">
+          <div className="my-3 flex gap-1 md:gap-2 justify-end">
             <input
               type="date"
               name="start"
@@ -196,43 +196,43 @@ const Penjualan = () => {
               onChange={(e) =>
                 setTanggal({ ...tanggal, start: e.target.value })
               }
-              className="border px-1 py-1 text-sm md:text-base text-center"
+              className="border px-1 py-1 text-xs md:text-sm lg:text-base text-center"
             />
             <input
               type="date"
               name="end"
               value={tanggal.end}
               onChange={(e) => setTanggal({ ...tanggal, end: e.target.value })}
-              className="border px-1 py-1 text-sm md:text-base text-center"
+              className="border px-1 py-1 text-xs md:text-sm lg:text-base text-center"
             />
             <Link
               onClick={handleReset}
-              className="bg-red-600 hover:bg-red-500 text-white px-3 rounded-sm text-sm md:text-base flex items-center"
+              className="bg-red-600 hover:bg-red-500 text-white px-3 rounded-sm text-xs md:text-sm lg:text-base flex items-center"
             >
               <i className="fa fa-times"></i>
             </Link>
             <button
               type="submit"
-              className="bg-colorPrimary hover:bg-colorPrimaryHover text-white px-3 rounded-sm text-sm md:text-base"
+              className="bg-colorPrimary hover:bg-colorPrimaryHover text-white px-3 rounded-sm text-xs md:text-sm lg:text-base"
             >
-              <i className="fa fa-search"></i> Cari
+              <i className="fa fa-search"></i> <span className="hidden md:inline">Cari</span>
             </button>
           </div>
         </form>
         <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-sm font-poppins">
           <thead>
-            <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
-              <th className="px-1 py-3 border border-gray-200">No</th>
-              <th className="px-1 py-3 border border-gray-200">ID Keranjang</th>
-              <th className="px-1 py-3 border border-gray-200">Date Time</th>
-              <th className="px-1 py-3 border border-gray-200">Pelanggan</th>
-              <th className="px-1 py-3 border border-gray-200 bg-green-200">
+            <tr className="bg-gray-100 text-gray-700 uppercase text-xs md:text-sm font-semibold text-center">
+              <th className="px-2 py-1 md:py-3 border border-gray-200">No</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">ID Keranjang</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Date Time</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Pelanggan</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200 bg-green-200">
                 Ttl Belanja
               </th>
-              <th className="px-1 py-3 border border-gray-200">Cash</th>
-              <th className="px-1 py-3 border border-gray-200">Kembalian</th>
-              <th className="px-1 py-3 border border-gray-200">Kasir</th>
-              <th className="px-1 py-3 border border-gray-200">Nota</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Cash</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Kembalian</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Kasir</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Nota</th>
             </tr>
           </thead>
           <tbody>
@@ -244,33 +244,33 @@ const Penjualan = () => {
                 return (
                   <tr
                     key={index}
-                    className="border border-gray-200 hover:bg-gray-50"
+                    className="border border-gray-200 hover:bg-gray-50 text-xs md:text-sm"
                   >
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {index + 1}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {val.cart_id}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {formatDate(val.trans_date)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {val.trans_pelanggan}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right bg-green-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-green-200">
                       {RupiahFormat(val.trans_total)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                       {RupiahFormat(val.trans_bayar)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                       {RupiahFormat(val.trans_kembalian)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200">
                       {val.users.name}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-center ">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center ">
                       <button
                         onClick={() => handleNota(val.cart_id)}
                         className="px-2 py-1 text-white bg-blue-500 hover:bg-blue-600 rounded"
@@ -307,21 +307,21 @@ const Penjualan = () => {
             <tr className="bg-gray-100">
               <td
                 colSpan={4}
-                className="px-6 py-3 border border-gray-200 text-right"
+                className="px-2 py-1 md:py-3 border border-gray-200 text-right"
               >
                 Jumlah
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right bg-green-200">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-green-200">
                 {RupiahFormat(ttlBelanja)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                 {RupiahFormat(ttlCash)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                 {RupiahFormat(ttlKembalian)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right"></td>
-              <td className="px-6 py-3 border border-gray-200 text-right"></td>
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right"></td>
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right"></td>
             </tr>
           </tbody>
         </table>

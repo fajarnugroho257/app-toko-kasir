@@ -180,7 +180,7 @@ const Hutang = () => {
           </Link>
         </div>
         <form onSubmit={handleCari}>
-          <div className="my-3 flex gap-2 justify-end">
+          <div className="my-3 flex gap-1 md:gap-2 justify-end">
             <input
               type="date"
               name="start"
@@ -188,45 +188,45 @@ const Hutang = () => {
               onChange={(e) =>
                 setTanggal({ ...tanggal, start: e.target.value })
               }
-              className="border px-1 py-1 text-sm md:text-base text-center"
+              className="border px-1 py-1 text-xs md:text-sm lg:text-base text-center"
             />
             <input
               type="date"
               name="end"
               value={tanggal.end}
               onChange={(e) => setTanggal({ ...tanggal, end: e.target.value })}
-              className="border px-1 py-1 text-sm md:text-base text-center"
+              className="border px-1 py-1 text-xs md:text-sm lg:text-base text-center"
             />
             <Link
               onClick={handleReset}
-              className="bg-red-600 hover:bg-red-500 text-white px-3 rounded-sm text-sm md:text-base flex items-center"
+              className="bg-red-600 hover:bg-red-500 text-white px-3 rounded-sm text-xs md:text-sm lg:text-base flex items-center"
             >
               <i className="fa fa-times"></i>
             </Link>
             <button
               type="submit"
-              className="bg-colorPrimary hover:bg-colorPrimaryHover text-white px-3 rounded-sm text-sm md:text-base"
+              className="bg-colorPrimary hover:bg-colorPrimaryHover text-white px-3 rounded-sm text-xs md:text-sm lg:text-base"
             >
-              <i className="fa fa-search"></i> Cari
+              <i className="fa fa-search"></i> <span className="hidden md:inline">Cari</span>
             </button>
           </div>
         </form>
         <table className="min-w-full border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-sm font-poppins">
           <thead>
-            <tr className="bg-gray-100 text-gray-700 uppercase font-semibold text-center">
-              <th className="px-1 py-3 border border-gray-200">No</th>
-              <th className="px-1 py-3 border border-gray-200">Date Create</th>
-              <th className="px-1 py-3 border border-gray-200">Cart ID</th>
-              <th className="px-1 py-3 border border-gray-200">Pelanggan</th>
-              <th className="px-1 py-3 border border-gray-200 bg-green-200">
+            <tr className="bg-gray-100 text-gray-700 uppercase font-semibold text-center ext-xs md:text-sm">
+              <th className="px-2 py-1 md:py-3 border border-gray-200">No</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Date Create</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Cart ID</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Pelanggan</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200 bg-green-200">
                 Ttl Belanja
               </th>
-              <th className="px-1 py-3 border border-gray-200">Uang Muka</th>
-              <th className="px-1 py-3 border border-gray-200 bg-red-200">
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Uang Muka</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200 bg-red-200">
                 Kekurangan
               </th>
-              <th className="px-1 py-3 border border-gray-200">Note</th>
-              <th className="px-1 py-3 border border-gray-200">Aksi</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Note</th>
+              <th className="px-2 py-1 md:py-3 border border-gray-200">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -240,35 +240,35 @@ const Hutang = () => {
                     key={index}
                     className="border border-gray-200 hover:bg-gray-50"
                   >
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {index + 1}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {formatDate(val.created_at)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {val.cart_id}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-center">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-center">
                       {val.trans_pelanggan ?? ""}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right bg-green-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-green-200">
                       {RupiahFormat(val.cart.cart_draft.draft_uang_tagihan)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                       {RupiahFormat(val.cart.cart_draft.draft_uang_muka)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200 text-right bg-red-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-red-200">
                       {RupiahFormat(val.cart.cart_draft.draft_uang_sisa)}
                     </td>
-                    <td className="px-6 py-3 border border-gray-200">
+                    <td className="px-2 py-1 md:py-3 border border-gray-200">
                       {val.cart.cart_draft.draft_note}
                     </td>
                     <td className="px-2 py-3 border border-gray-200 text-base md:text-xl text-center">
                       <Link
                         onClick={() => handleListCart(val.cart_id)}
                         title="Lihat Data Barang"
-                        className="fa fa-eye text-colorPrimary md:mr-3"
+                        className="fa fa-eye text-colorPrimary xl:mr-3"
                       ></Link>
                       <Link
                         onClick={() => handleNota(val.cart_id)}
@@ -292,21 +292,21 @@ const Hutang = () => {
             <tr className="bg-gray-100">
               <td
                 colSpan={4}
-                className="px-6 py-3 border border-gray-200 text-right"
+                className="px-2 py-1 md:py-3 border border-gray-200 text-right"
               >
                 Jumlah
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right bg-green-200">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-green-200">
                 {RupiahFormat(ttlTagihan)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right">
                 {RupiahFormat(ttlUangMuka)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right bg-red-200">
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right bg-red-200">
                 {RupiahFormat(ttlKekurangan)}
               </td>
-              <td className="px-6 py-3 border border-gray-200 text-right"></td>
-              <td className="px-6 py-3 border border-gray-200 text-right"></td>
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right"></td>
+              <td className="px-2 py-1 md:py-3 border border-gray-200 text-right"></td>
             </tr>
           </tbody>
         </table>

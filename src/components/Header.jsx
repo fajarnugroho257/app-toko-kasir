@@ -48,7 +48,7 @@ function Header(status) {
           ></i>
           <div className="flex gap-3 items-center">
             <i className="fa fa-cash-register"></i>
-            <h3 className="md:text-xl font-semibold text-xl mdtext-4xl font-poppins">
+            <h3 className="md:text-xl font-semibold text-base mdtext-4xl font-poppins">
               {cabang_nama}
             </h3>
           </div>

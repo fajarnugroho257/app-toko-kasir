@@ -295,7 +295,7 @@ function ModalDetailHutang({ isOpen, onClose, cartId, loadData }) {
                             </td>
                           </tr>
                         ))}
-                        <tr>
+                        <tr className="bg-red-200">
                           <td
                             colSpan="2"
                             className="px-6 py-3 border border-gray-200 text-right"

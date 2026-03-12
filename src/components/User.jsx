@@ -29,7 +29,7 @@ function User() {
   return (
     <div>
       <div className="relative" ref={dropdownRef}>
-        <div onClick={toggleUser} className="cursor-pointer">
+        <div onClick={toggleUser} className="cursor-pointer font-poppins text-sm md:text-base">
           <i className="fa fa-user"></i> {name}
         </div>
         <div

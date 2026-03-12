@@ -45,7 +45,7 @@ const Setting = () => {
             </Link>
           </div>
         </div>
-        <table className="w-full md:w-1/2 md:mx-auto border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base">
+        <table className="w-full md:w-1/2 md:mx-auto border-collapse border border-gray-200 shadow-md rounded-lg text-xs md:text-base font-poppins">
           <thead>
             <tr className="bg-gray-100 text-gray-700 uppercase text-sm font-semibold text-center">
               <th className="px-1 py-3 border border-gray-200">No</th>
